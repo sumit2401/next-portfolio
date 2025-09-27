@@ -1,100 +1,25 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
-import { motion, useInView } from "framer-motion"
 import Image from "next/image"
-import abountImage from "../../app/assets/images/sumit-pic.jpg"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
 
-export default function About() {
-  const ref = useRef<HTMLDivElement | null>(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const wordRefs = useRef<(HTMLSpanElement | null)[]>([])
-  const [wordsRevealed, setWordsRevealed] = useState(false)
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
-  // Paragraphs to animate
+export default function About() {
+  const sectionRef = useRef<HTMLDivElement | null>(null)
+  const textContainerRef = useRef<HTMLDivElement | null>(null)
+  const wordRefs = useRef<(HTMLSpanElement | null)[]>([])
+  const [isInitialized, setIsInitialized] = useState(false)
+
   const paragraphs = [
     "Hello! I'm Sumit Patel, and I find joy in crafting and overseeing creations that exist on the vast canvas of the internet. My journey into the realm of web development commenced in 2019, coinciding with the start of my college adventure. It was during this time that I undertook my inaugural college project, a static e-commerce website, which served as a pivotal moment in my learning journey, offering invaluable insights into the intricacies of HTML, CSS and Javascript.",
     "Presently, my focus revolves around the development of a robust e-commerce platform. Leveraging the power of React.js and the Context API, I'm actively shaping a fully functional digital marketplace. The backend of this endeavor is fortified by the seamless capabilities of NodeJs, ExpressJs, and the database is powered by MongoDB, ensuring not only a dynamic user experience but also robust authentication mechanisms.",
     "My dedication to continuous learning and innovation fuels my passion for web development. Each project is an opportunity to refine my skills and contribute to the evolving landscape of the digital world. I'm excited about the limitless possibilities that lie ahead and the chance to create meaningful and impactful solutions.",
   ]
-
-  // Flatten all words for easier indexing
-  const allWords = paragraphs.flatMap(p => p.split(" "))
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      gsap.registerPlugin(ScrollTrigger)
-      
-      // Set all words to initial opacity 0.1
-      wordRefs.current.forEach(word => {
-        if (word) word.style.opacity = "0.1"
-      })
-      
-      const section = ref.current
-      if (!section) return
-      
-      // Calculate total words for more precise end timing
-      const totalWords = wordRefs.current.length
-      
-      // Create a scroll trigger that pins the section in place during word reveal
-      const wordsTrigger = ScrollTrigger.create({
-        trigger: section,
-        start: "top top", // Start when the section hits the top of viewport
-        end: "+=200%", // Shorter end point to avoid excessive pinning
-        pin: true, // Pin the section in place
-        pinSpacing: true,
-        anticipatePin: 1, // Helps with smoother pinning
-        scrub: 0.3, // More precise scrubbing for word reveal
-        onUpdate: self => {
-          const progress = self.progress // 0 to 1
-          
-          // Calculate how many words should be revealed based on scroll progress
-          const revealCount = Math.ceil(progress * totalWords)
-          
-          wordRefs.current.forEach((word, i) => {
-            if (word) {
-              // Words appear one by one based on scroll progress
-              word.style.opacity = i < revealCount ? "1" : "0.1"
-            }
-          })
-          
-          // Update the state when all words are revealed
-          if (progress >= 0.99 && !wordsRevealed) {
-            setWordsRevealed(true)
-          } else if (progress < 0.99 && wordsRevealed) {
-            setWordsRevealed(false)
-          }
-        },
-        markers: false // Set to true during development to visualize the trigger points
-      })
-      
-      return () => {
-        wordsTrigger.kill()
-        ScrollTrigger.getAll().forEach(t => t.kill())
-      }
-    }
-  }, [allWords.length, wordsRevealed])
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  }
 
   const skills = [
     "JavaScript (ES6+)",
@@ -107,7 +32,92 @@ export default function About() {
     "GraphQL",
   ]
 
-  // Helper to split text into word spans and collect refs
+  useEffect(() => {
+    if (typeof window === "undefined" || !sectionRef.current) return
+
+    // Clear any existing ScrollTriggers
+    ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+
+    const section = sectionRef.current
+    const textContainer = textContainerRef.current
+
+    if (!textContainer) return
+
+    // Set initial state for all words
+    gsap.set(wordRefs.current.filter(Boolean), {
+      opacity: 0.2,
+      willChange: "opacity",
+    })
+
+    // Create timeline for smoother animations with pinning
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: "+=150%", // Adjust this value to control how long the section stays pinned
+        pin: true,
+        pinSpacing: true,
+        scrub: 1,
+        anticipatePin: 1,
+        refreshPriority: -1,
+        onUpdate: (self) => {
+          const progress = self.progress
+          const totalWords = wordRefs.current.filter(Boolean).length
+          const wordsToReveal = Math.floor(progress * totalWords)
+
+          // Use requestAnimationFrame for smoother updates
+          requestAnimationFrame(() => {
+            wordRefs.current.forEach((word, index) => {
+              if (word) {
+                const shouldReveal = index <= wordsToReveal
+                word.style.opacity = shouldReveal ? "1" : "0.2"
+              }
+            })
+          })
+        },
+        onRefresh: () => {
+          // Recalculate on layout changes
+        },
+      },
+    })
+
+    // Initial fade in animation for the section
+    gsap.fromTo(
+      section.querySelector("div"),
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          end: "top 50%",
+          toggleActions: "play none none reverse",
+        },
+      },
+    )
+
+    setIsInitialized(true)
+
+    // Cleanup function
+    return () => {
+      tl.kill()
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+    }
+  }, [])
+
+  // Refresh ScrollTrigger on resize
+  useEffect(() => {
+    const handleResize = () => {
+      ScrollTrigger.refresh()
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   let wordIndex = 0
   const renderAnimatedText = (text: string) => {
     return text.split(" ").map((word, i) => {
@@ -115,10 +125,11 @@ export default function About() {
       return (
         <span
           key={idx}
-          ref={el => {
+          ref={(el) => {
             wordRefs.current[idx] = el
           }}
-          className="inline-block opacity-10 transition-opacity duration-300 ease-in-out mr-1"
+          className="inline-block opacity-20 mr-1 transition-opacity duration-200 ease-out"
+          style={{ willChange: "opacity" }}
         >
           {word}
         </span>
@@ -126,54 +137,59 @@ export default function About() {
     })
   }
 
-  wordIndex = 0 // reset before rendering
+  // Reset word index before rendering
+  wordIndex = 0
 
   return (
-    <motion.section
+    <section
       id="about"
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={containerVariants}
-      className="section"
+      ref={sectionRef}
+      className="min-h-screen max-w-6xl py-20 px-4 md:px-8"
+      style={{ willChange: "transform" }}
     >
-      <motion.h2 variants={itemVariants} className="numbered-heading mb-10">
-        About Me
-      </motion.h2>
+      <div className="opacity-100" style={{ willChange: "opacity, transform" }}>
+        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-teal-400">
+          <span className="text-teal-400 font-mono text-xl mr-2">01.</span>
+          About Me
+        </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        <motion.div variants={itemVariants} className="md:col-span-2 space-y-4">
-          {paragraphs.map((para, idx) => (
-            <p key={idx} className="leading-relaxed">
-              {renderAnimatedText(para)}
-            </p>
-          ))}
-         
-          {/*
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4">
-            {skills.map((skill, i) => (
-              <motion.li key={i} variants={itemVariants} className="flex items-center font-mono text-sm">
-                <span className="text-teal mr-2">▹</span>
-                {skill}
-              </motion.li>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+          <div ref={textContainerRef} className="lg:col-span-2 space-y-6">
+            {paragraphs.map((para, idx) => (
+              <p key={idx} className="text-slate-400 leading-relaxed text-lg">
+                {renderAnimatedText(para)}
+              </p>
             ))}
-          </ul> */}
-        </motion.div>
 
-        <motion.div variants={itemVariants} className="relative group">
-          <div className="relative w-full max-w-[300px] mx-auto aspect-square">
-            <div className="absolute inset-0 border-2 border-teal rounded translate-x-5 translate-y-5 group-hover:translate-x-4 group-hover:translate-y-4 transition-transform duration-300 z-0"></div>
-            <div className="absolute inset-0 bg-teal/20 rounded z-10 group-hover:bg-transparent transition-colors duration-300"></div>
-            <Image
-              src={abountImage}
-              alt="Profile"
-              width={300}
-              height={300}
-              className="rounded z-[5] relative grayscale group-hover:grayscale-0 transition-all duration-300"
-            />
+            <div className="mt-8">
+              <p className="text-slate-400 mb-4">Here are a few technologies I've been working with recently:</p>
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm font-mono">
+                {skills.map((skill, i) => (
+                  <li key={i} className="flex items-center text-slate-400">
+                    <span className="text-teal-400 mr-3">▹</span>
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </motion.div>
+
+          <div className="relative group mx-auto lg:mx-0">
+            <div className="relative w-full max-w-[280px] aspect-square">
+              <div className="absolute inset-0 border-2 border-teal-400 rounded translate-x-5 translate-y-5 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform duration-300 ease-out z-0"></div>
+              <div className="absolute inset-0 bg-teal-400/20 rounded z-10 group-hover:bg-transparent transition-all duration-300 ease-out"></div>
+              <Image
+                src="/placeholder.svg?height=280&width=280"
+                alt="Sumit Patel Profile"
+                width={280}
+                height={280}
+                className="rounded z-20 relative grayscale group-hover:grayscale-0 transition-all duration-300 ease-out object-cover"
+                priority
+              />
+            </div>
+          </div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   )
 }

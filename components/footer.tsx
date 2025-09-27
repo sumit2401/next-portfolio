@@ -110,7 +110,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="hover:text-teal transition-colors"
           >
-            Designed & Built by John Doe
+            Designed & Built by Sumit Patel
           </Link>
         </p>
         <p>© {new Date().getFullYear()} All Rights Reserved</p>

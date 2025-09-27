@@ -112,7 +112,7 @@ export default function Projects() {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="section"
+      className="min-h-screen max-w-6xl py-20 px-4 md:px-8"
     >
       <motion.h2 variants={itemVariants} className="numbered-heading mb-10">
         Some Things I've Built

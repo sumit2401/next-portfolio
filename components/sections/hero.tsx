@@ -33,7 +33,7 @@ export default function Hero() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-h-screen flex flex-col justify-center section relative"
+      className="min-h-screen max-w-6xl py-20 px-4 md:px-8 flex flex-col justify-center section relative"
     >
       {/* Decorative elements */}
       <div className="absolute -z-10 top-1/4 right-0 w-72 h-72 bg-teal/5 rounded-full blur-3xl"></div>

@@ -5,9 +5,9 @@ import MainContent from "@/components/main-content"
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <Suspense fallback={<Loader />}>
+      {/* <Suspense fallback={<Loader />}> */}
         <MainContent />
-      </Suspense>
+      {/* </Suspense> */}
     </main>
   )
 }

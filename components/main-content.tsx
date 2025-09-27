@@ -14,6 +14,7 @@ import Footer from "./footer"
 import ScrollIndicator from "./scroll-indicator"
 import About from "./sections/about"
 
+
 export default function MainContent() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [currentSection, setCurrentSection] = useState(1)
@@ -90,13 +91,13 @@ export default function MainContent() {
       <SocialSidebar />
       <EmailSidebar />
       {/* <ScrollIndicator currentSection={currentSection} totalSections={sectionList.length} isLoaded={isLoaded} /> */}
-      <div className="px-6 sm:px-12 md:px-24 lg:px-36">
+      <div className="">
         {sectionList.map(({ id, Component }, idx) => (
           <section
             key={id}
             id={id}
             ref={el => { sectionRefs.current[idx] = el }}
-            className="min-h-screen flex items-center justify-center"
+            className="min-h-screen  flex items-center justify-center"
             data-active={activeScrollSection === id}
           >
             <Component />
