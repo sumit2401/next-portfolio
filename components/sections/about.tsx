@@ -1,19 +1,19 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect } from "react"
 import Image from "next/image"
 import gsap from "gsap"
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import AboutImage from '../../app/assets/images/sumit-pic.jpg'
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
 export default function About() {
-  const sectionRef = useRef<HTMLDivElement | null>(null)
-  const textContainerRef = useRef<HTMLDivElement | null>(null)
-  const wordRefs = useRef<(HTMLSpanElement | null)[]>([])
-  const [isInitialized, setIsInitialized] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const textContainerRef = useRef<HTMLDivElement>(null)
+  const allCharsRef = useRef<HTMLElement[]>([])
 
   const paragraphs = [
     "Hello! I'm Sumit Patel, and I find joy in crafting and overseeing creations that exist on the vast canvas of the internet. My journey into the realm of web development commenced in 2019, coinciding with the start of my college adventure. It was during this time that I undertook my inaugural college project, a static e-commerce website, which served as a pivotal moment in my learning journey, offering invaluable insights into the intricacies of HTML, CSS and Javascript.",
@@ -33,123 +33,77 @@ export default function About() {
   ]
 
   useEffect(() => {
-    if (typeof window === "undefined" || !sectionRef.current) return
-
-    // Clear any existing ScrollTriggers
-    ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+    if (typeof window === "undefined" || !sectionRef.current || !textContainerRef.current) return
 
     const section = sectionRef.current
     const textContainer = textContainerRef.current
 
-    if (!textContainer) return
+    // Clear any existing ScrollTriggers
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill())
 
-    // Set initial state for all words
-    gsap.set(wordRefs.current.filter(Boolean), {
-      opacity: 0.2,
-      willChange: "opacity",
+    // Prepare text for animation
+    const prepareText = () => {
+      allCharsRef.current = []
+      const paragraphs = textContainer.querySelectorAll('p')
+      
+      paragraphs.forEach((paragraph) => {
+        const text = paragraph.textContent || ''
+        const chars = text.split('').map((char) => {
+          const span = document.createElement('span')
+          span.textContent = char
+          span.style.opacity = '0.2'
+          span.style.transition = 'opacity 0.1s ease'
+          return span
+        })
+        
+        paragraph.innerHTML = ''
+        chars.forEach(char => paragraph.appendChild(char))
+        allCharsRef.current.push(...chars)
+      })
+    }
+
+    // Initialize text
+    prepareText()
+
+    // Create the main scroll trigger with pinning
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top 5%",
+      end: "+=300%", // Extended scroll range for animation
+      pin: true,
+      pinSpacing: true,
+      scrub: 1,
+      onUpdate: (self) => {
+        const progress = self.progress
+        const totalChars = allCharsRef.current.length
+        const charsToReveal = Math.floor(progress * totalChars)
+
+        // Reveal characters based on scroll progress
+        allCharsRef.current.forEach((char, index) => {
+          if (index < charsToReveal) {
+            char.style.opacity = '1'
+          } else {
+            char.style.opacity = '0.2'
+          }
+        })
+      }
     })
 
-    // Create timeline for smoother animations with pinning
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: "+=150%", // Adjust this value to control how long the section stays pinned
-        pin: true,
-        pinSpacing: true,
-        scrub: 1,
-        anticipatePin: 1,
-        refreshPriority: -1,
-        onUpdate: (self) => {
-          const progress = self.progress
-          const totalWords = wordRefs.current.filter(Boolean).length
-          const wordsToReveal = Math.floor(progress * totalWords)
-
-          // Use requestAnimationFrame for smoother updates
-          requestAnimationFrame(() => {
-            wordRefs.current.forEach((word, index) => {
-              if (word) {
-                const shouldReveal = index <= wordsToReveal
-                word.style.opacity = shouldReveal ? "1" : "0.2"
-              }
-            })
-          })
-        },
-        onRefresh: () => {
-          // Recalculate on layout changes
-        },
-      },
-    })
-
-    // Initial fade in animation for the section
-    gsap.fromTo(
-      section.querySelector("div"),
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: section,
-          start: "top 80%",
-          end: "top 50%",
-          toggleActions: "play none none reverse",
-        },
-      },
-    )
-
-    setIsInitialized(true)
-
-    // Cleanup function
     return () => {
-      tl.kill()
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+      scrollTrigger.kill()
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill())
     }
   }, [])
-
-  // Refresh ScrollTrigger on resize
-  useEffect(() => {
-    const handleResize = () => {
-      ScrollTrigger.refresh()
-    }
-
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
-
-  let wordIndex = 0
-  const renderAnimatedText = (text: string) => {
-    return text.split(" ").map((word, i) => {
-      const idx = wordIndex++
-      return (
-        <span
-          key={idx}
-          ref={(el) => {
-            wordRefs.current[idx] = el
-          }}
-          className="inline-block opacity-20 mr-1 transition-opacity duration-200 ease-out"
-          style={{ willChange: "opacity" }}
-        >
-          {word}
-        </span>
-      )
-    })
-  }
-
-  // Reset word index before rendering
-  wordIndex = 0
 
   return (
     <section
       id="about"
       ref={sectionRef}
       className="min-h-screen max-w-6xl py-20 px-4 md:px-8"
-      style={{ willChange: "transform" }}
     >
-      <div className="opacity-100" style={{ willChange: "opacity, transform" }}>
+      <div>
         <h2 className="text-3xl md:text-4xl font-bold mb-16 text-teal-400">
-          <span className="text-teal-400 font-mono text-xl mr-2">01.</span>
+          <span className="text-teal font-mono text-xl mr-2">01.</span>
           About Me
         </h2>
 
@@ -157,12 +111,13 @@ export default function About() {
           <div ref={textContainerRef} className="lg:col-span-2 space-y-6">
             {paragraphs.map((para, idx) => (
               <p key={idx} className="text-slate-400 leading-relaxed text-lg">
-                {renderAnimatedText(para)}
+                {para}
               </p>
             ))}
 
             <div className="mt-8">
-              <p className="text-slate-400 mb-4">Here are a few technologies I've been working with recently:</p>
+                <p className="text-slate-400 mb-4">Here are a few technologies I've been working with recently:</p>
+             
               <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm font-mono">
                 {skills.map((skill, i) => (
                   <li key={i} className="flex items-center text-slate-400">
@@ -176,14 +131,14 @@ export default function About() {
 
           <div className="relative group mx-auto lg:mx-0">
             <div className="relative w-full max-w-[280px] aspect-square">
-              <div className="absolute inset-0 border-2 border-teal-400 rounded translate-x-5 translate-y-5 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform duration-300 ease-out z-0"></div>
+              <div className="absolute inset-0 border-2 border-teal rounded translate-x-5 translate-y-5 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform duration-300 ease-out z-0"></div>
               <div className="absolute inset-0 bg-teal-400/20 rounded z-10 group-hover:bg-transparent transition-all duration-300 ease-out"></div>
               <Image
-                src="/placeholder.svg?height=280&width=280"
+                src={AboutImage}
                 alt="Sumit Patel Profile"
                 width={280}
                 height={280}
-                className="rounded z-20 relative grayscale group-hover:grayscale-0 transition-all duration-300 ease-out object-cover"
+                className="rounded z-20 relative  group-hover:grayscale-0 transition-all duration-300 ease-out object-cover"
                 priority
               />
             </div>

@@ -81,24 +81,7 @@ export default function Hero() {
       {/* </motion.div> */}
 
       {/* Animated cursor */}
-      <motion.div
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 w-6 h-10 border-2 border-teal rounded-full flex justify-center"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5 }}
-      >
-        <motion.div
-          className="w-1.5 h-3 bg-teal rounded-full mt-2"
-          animate={{
-            y: [0, 12, 0],
-          }}
-          transition={{
-            repeat: Number.POSITIVE_INFINITY,
-            duration: 1.5,
-            ease: "easeInOut",
-          }}
-        />
-      </motion.div>
+    
     </motion.section>
   )
 }

@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import Header from "./header"
+import SidebarNav from "./sidebar-nav"
 import Hero from "./sections/hero"
 import Experience from "./sections/experience"
 import Projects from "./sections/projects"
@@ -11,8 +11,9 @@ import Skills from "./sections/skills"
 import SocialSidebar from "./social-sidebar"
 import EmailSidebar from "./email-sidebar"
 import Footer from "./footer"
-import ScrollIndicator from "./scroll-indicator"
 import About from "./sections/about"
+import {ReactLenis} from "lenis/react"
+import gsap from "gsap"
 
 
 export default function MainContent() {
@@ -20,6 +21,8 @@ export default function MainContent() {
   const [currentSection, setCurrentSection] = useState(1)
   const [activeScrollSection, setActiveScrollSection] = useState("")
   const sectionRefs = useRef<(HTMLElement | null)[]>([])
+
+  const lenisRef = useRef<any>()
 
   // Section order must match the render order below
   const sectionList = [
@@ -31,43 +34,65 @@ export default function MainContent() {
     { id: "contact", Component: Contact },
   ]
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true)
-    }, 2000)
-    return () => clearTimeout(timer)
-  }, [])
+ 
 
-  useEffect(() => {
-    // Only run after loading animation is complete
-    if (!isLoaded) return
+useEffect(() => {
+  function update(time: any) {
+    if (lenisRef.current?.lenis) {
+      lenisRef.current.lenis.raf(time * 1000);
+    }
+  }
+
+  
+  
+  // Add a small delay to ensure Lenis is initialized
+  const timeoutId = setTimeout(() => {
+    gsap.ticker.add(update);
+  }, 100);
+  
+  return () => {
+    clearTimeout(timeoutId);
+    gsap.ticker.remove(update);
+  };
+}, [])
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setIsLoaded(true)
+  }, 2000)
+  return () => clearTimeout(timer)
+}, [])
+
+  // useEffect(() => {
+  //   // Only run after loading animation is complete
+  //   if (!isLoaded) return
     
-    const observer = new window.IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting)
-        if (visible.length > 0) {
-          // Find the topmost visible section
-          const topmost = visible.reduce((prev, curr) =>
-            prev.boundingClientRect.top < curr.boundingClientRect.top ? prev : curr
-          )
-          const idx = sectionRefs.current.findIndex(
-            (ref) => ref === topmost.target
-          )
-          if (idx !== -1) {
-            setCurrentSection(idx + 1)
-            setActiveScrollSection(sectionList[idx].id)
-          }
-        }
-      },
-      { threshold: 0.3 }
-    )
+  //   const observer = new window.IntersectionObserver(
+  //     (entries) => {
+  //       const visible = entries.filter((entry) => entry.isIntersecting)
+  //       if (visible.length > 0) {
+  //         // Find the topmost visible section
+  //         const topmost = visible.reduce((prev, curr) =>
+  //           prev.boundingClientRect.top < curr.boundingClientRect.top ? prev : curr
+  //         )
+  //         const idx = sectionRefs.current.findIndex(
+  //           (ref) => ref === topmost.target
+  //         )
+  //         if (idx !== -1) {
+  //           setCurrentSection(idx + 1)
+  //           setActiveScrollSection(sectionList[idx].id)
+  //         }
+  //       }
+  //     },
+  //     { threshold: 0.3 }
+  //   )
     
-    sectionRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref)
-    })
+  //   sectionRefs.current.forEach((ref) => {
+  //     if (ref) observer.observe(ref)
+  //   })
     
-    return () => observer.disconnect()
-  }, [isLoaded])
+  //   return () => observer.disconnect()
+  // }, [isLoaded])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -87,18 +112,18 @@ export default function MainContent() {
       variants={containerVariants}
       className="relative"
     >
-      <Header />
+      <ReactLenis root options={{autoRaf: false}} ref={lenisRef}/>
+      <SidebarNav currentSection={currentSection} totalSections={sectionList.length} isLoaded={isLoaded} />
       <SocialSidebar />
       <EmailSidebar />
-      {/* <ScrollIndicator currentSection={currentSection} totalSections={sectionList.length} isLoaded={isLoaded} /> */}
-      <div className="">
+      <div className="ml-16">
         {sectionList.map(({ id, Component }, idx) => (
           <section
             key={id}
-            id={id}
-            ref={el => { sectionRefs.current[idx] = el }}
-            className="min-h-screen  flex items-center justify-center"
-            data-active={activeScrollSection === id}
+            // id={id}
+            // ref={el => { sectionRefs.current[idx] = el }}
+            className="min-h-screen flex items-center justify-center"
+            // data-active={activeScrollSection === id}
           >
             <Component />
           </section>
