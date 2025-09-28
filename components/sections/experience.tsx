@@ -4,9 +4,9 @@ import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export default function Experience() {
+export default function Experience(sectionRefs: any) {
   const [activeTab, setActiveTab] = useState("company1");
-  const ref = useRef(null);
+  const ref = useRef(sectionRefs);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const containerVariants = {
