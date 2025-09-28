@@ -58,7 +58,7 @@ export default function SidebarNav({ currentSection, totalSections, isLoaded }: 
       initial={{ x: -100, opacity: 0 }}
       animate={isLoaded ? { x: 0, opacity: 1 } : { x: -100, opacity: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="fixed left-0 top-0 h-full w-24 bg-black z-50 flex"
+      className="fixed left-0 top-0 h-full w-24 bg-black  flex"
     >
       {/* Left Edge Progress Bar */}
       <div className="w-1 h-full bg-gray-800 relative">
