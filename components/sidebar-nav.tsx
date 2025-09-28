@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Home, User, Briefcase, Code, Mail, Menu } from "lucide-react"
+import Link from "next/link"
+import { HexSLogo } from "@/icons/icons"
 
 interface SidebarNavProps {
   currentSection: number
@@ -39,13 +41,24 @@ export default function SidebarNav({ currentSection, totalSections, isLoaded }: 
       element.scrollIntoView({ behavior: "smooth" })
     }
   }
+  const logoVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delay: 0.1,
+        duration: 0.3,
+      },
+    },
+  }
+
 
   return (
     <motion.div
       initial={{ x: -100, opacity: 0 }}
       animate={isLoaded ? { x: 0, opacity: 1 } : { x: -100, opacity: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="fixed left-0 top-0 h-full w-16 bg-black z-50 flex"
+      className="fixed left-0 top-0 h-full w-24 bg-black z-50 flex"
     >
       {/* Left Edge Progress Bar */}
       <div className="w-1 h-full bg-gray-800 relative">
@@ -54,7 +67,7 @@ export default function SidebarNav({ currentSection, totalSections, isLoaded }: 
           className="w-full bg-teal from-teal-400 to-teal-600"
           style={{ 
             height: `${scrollProgress}%`,
-            marginTop: '70px' // Start from first nav item position (py-6 + mb-8 + menu icon height)
+            marginTop: '115px' // Start from first nav item position (py-6 + mb-8 + menu icon height)
           }}
           initial={{ height: 0 }}
           animate={{ height: `${scrollProgress}%` }}
@@ -63,14 +76,14 @@ export default function SidebarNav({ currentSection, totalSections, isLoaded }: 
       </div>
 
       {/* Main Sidebar Content */}
-      <div className="flex-1 flex flex-col items-center py-6">
+      <div className="flex-1 flex flex-col items-center py-6 ">
         {/* Menu Icon */}
-        <div className="mb-8">
-          <div className="flex flex-col space-y-1">
-            <div className="w-5 h-0.5 bg-white/70"></div>
-            <div className="w-5 h-0.5 bg-white/70"></div>
-          </div>
-        </div>
+
+          <motion.div initial="hidden" animate="visible" variants={logoVariants} className="z-50 flex-shrink-0 mb-6">
+          <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform">
+            <HexSLogo size={60} />
+          </Link>
+        </motion.div>
 
         {/* Navigation Items */}
         <div className="flex flex-col space-y-6 flex-1">

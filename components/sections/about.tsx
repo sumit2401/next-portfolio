@@ -16,9 +16,10 @@ export default function About() {
   const allCharsRef = useRef<HTMLElement[]>([])
 
   const paragraphs = [
-    "Hello! I'm Sumit Patel, and I find joy in crafting and overseeing creations that exist on the vast canvas of the internet. My journey into the realm of web development commenced in 2019, coinciding with the start of my college adventure. It was during this time that I undertook my inaugural college project, a static e-commerce website, which served as a pivotal moment in my learning journey, offering invaluable insights into the intricacies of HTML, CSS and Javascript.",
-    "Presently, my focus revolves around the development of a robust e-commerce platform. Leveraging the power of React.js and the Context API, I'm actively shaping a fully functional digital marketplace. The backend of this endeavor is fortified by the seamless capabilities of NodeJs, ExpressJs, and the database is powered by MongoDB, ensuring not only a dynamic user experience but also robust authentication mechanisms.",
-    "My dedication to continuous learning and innovation fuels my passion for web development. Each project is an opportunity to refine my skills and contribute to the evolving landscape of the digital world. I'm excited about the limitless possibilities that lie ahead and the chance to create meaningful and impactful solutions.",
+    "Hello! I’m Sumit Patel, a passionate Full Stack Developer with 2+ years of professional experience building modern, scalable, and optimized digital solutions. My journey into web development began in 2019 with a simple static e-commerce project during my college days, which sparked my curiosity and set me on a path to creating impactful products on the web.",
+    "Over the years, I’ve gained hands-on expertise in crafting ERP ahend CRM systems, developing SEO-friendly websites, and building high-performance e-commerce platforms. I thrive on transforming ideas into robust applications that are not only functional but also efficient and user-friendly.",
+    "My core technical toolkit includes React.js, Next.js, TypeScript, Redux, and Socket.io, along with backend experience in Node.js, Express.js, and SQL. I enjoy architecting solutions that blend clean UI/UX with optimized performance and secure, scalable backend systems.",
+    "What drives me is continuous learning and the excitement of solving real-world problems through technology. Each project I work on is an opportunity to innovate, refine my skills, and contribute to creating meaningful digital experiences."
   ]
 
   const skills = [
@@ -68,7 +69,7 @@ export default function About() {
     // Create the main scroll trigger with pinning
     const scrollTrigger = ScrollTrigger.create({
       trigger: section,
-      start: "top 5%",
+      start: "top 0%",
       end: "+=300%", // Extended scroll range for animation
       pin: true,
       pinSpacing: true,
@@ -99,7 +100,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="min-h-screen max-w-6xl py-20 px-4 md:px-8"
+      className="min-h-screen max-w-6xl py-20 px-4 md:px-8 section"
     >
       <div>
         <h2 className="text-3xl md:text-4xl font-bold mb-16 text-teal-400">
@@ -110,7 +111,7 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
           <div ref={textContainerRef} className="lg:col-span-2 space-y-6">
             {paragraphs.map((para, idx) => (
-              <p key={idx} className="text-slate-400 leading-relaxed text-lg">
+              <p key={idx} className="text-slate-400 leading-relaxed text-md">
                 {para}
               </p>
             ))}

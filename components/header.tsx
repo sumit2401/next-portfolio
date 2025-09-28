@@ -65,7 +65,7 @@ export default function Header() {
     )
   }
 
-  const headerClasses = `fixed top-0 w-full z-40 px-6 sm:px-12 md:px-24 lg:px-12  transition-all duration-300 ${
+  const headerClasses = `fixed top-0 w-full z-40 px-2 sm:px-12 md:px-24 lg:px-12  transition-all duration-300 ${
     scrolledToTop ? "bg-transparent" : "shadow-md"
   } ${scrollDirection === "down" && !scrolledToTop ? "-translate-y-full" : "translate-y-0"}`
 
@@ -147,14 +147,14 @@ export default function Header() {
       <nav className="relative flex items-center justify-between h-20 w-full">
         {/* Left: Logo */}
         <motion.div initial="hidden" animate="visible" variants={logoVariants} className="z-50 flex-shrink-0 mt-5 ml-10">
-          <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform">
+          {/* <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform">
             <HexSLogo size={60} />
-          </Link>
+          </Link> */}
         </motion.div>
 
         {/* Center: Desktop Navigation */}
         <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center mt-5">
-          <FloatingDock
+          {/* <FloatingDock
             items={navLinks.map(link => ({
               title: link.name,
               icon: <link.icon className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
@@ -165,19 +165,19 @@ export default function Header() {
                 ? "bg-white/80 border border-blue-200"
                 : "bg-navy/80 border border-slate-600"
             }
-          />
+          /> */}
           {/* Theme toggle */}
-          <button
+          {/* <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="ml-4 p-2 rounded-full hover:bg-slate-700/40 transition-colors border border-transparent focus:border-teal"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
+          </button> */}
         </div>
 
         {/* Right: Resume Button */}
-        <motion.div custom={navLinks.length} initial="hidden" animate="visible" variants={navVariants} className="hidden md:flex flex-shrink-0 mt-5">
+        <motion.div custom={navLinks.length} initial="hidden" animate="visible" variants={navVariants} className="flex flex-shrink-0 mt-5">
           <GlowingButton
             className="shiny-button "
             borderRadius="rounded-full"
@@ -186,16 +186,17 @@ export default function Header() {
           </GlowingButton>
         </motion.div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button - Logo Icon */}
         <motion.button
           initial="hidden"
           animate="visible"
           variants={logoVariants}
-          className="md:hidden z-50 text-teal"
+          className="md:hidden z-50 flex items-center gap-2 hover:scale-105 transition-transform"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle Menu"
         >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          <HexSLogo size={40} />
+          {isMenuOpen ? <X size={24} className="ml-2" /> : <Menu size={24} className="ml-2" />}
         </motion.button>
 
         {/* Mobile Menu */}
@@ -210,6 +211,13 @@ export default function Header() {
             isMenuOpen ? "block" : "hidden"
           }`}
         >
+          {/* Mobile Menu Header with Logo */}
+          <div className="absolute top-6 left-6">
+            <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform">
+              <HexSLogo size={40} />
+            </Link>
+          </div>
+          
           <ul className="flex flex-col space-y-6 items-center">
             {navLinks.map((link, i) => (
               <li key={i}>
@@ -224,8 +232,10 @@ export default function Header() {
               </li>
             ))}
           </ul>
-          <div className="mt-8">
-            <GlowingButton  className="shiny-button " borderRadius="rounded-full">
+          
+          {/* Mobile Menu Footer with Resume Button */}
+          <div className="absolute bottom-6">
+            <GlowingButton className="shiny-button" borderRadius="rounded-full">
               Resume
             </GlowingButton>
           </div>

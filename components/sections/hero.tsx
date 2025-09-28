@@ -33,7 +33,7 @@ export default function Hero() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-h-screen max-w-6xl py-20 px-4 md:px-8 flex flex-col justify-center section relative"
+      className="min-h-screen max-w-6xl py-20 px-4 md:px-8 flex flex-col justify-center  relative"
     >
       {/* Decorative elements */}
       <div className="absolute -z-10 top-1/4 right-0 w-72 h-72 bg-teal/5 rounded-full blur-3xl"></div>
@@ -67,8 +67,8 @@ export default function Hero() {
           </span>
         </h2>
       </motion.div>
-      <motion.p variants={itemVariants} className="text-slate max-w-xl mb-12 text-lg leading-relaxed">
-        I'm a software engineer specializing in building (and occasionally designing) exceptional digital experiences.
+      <motion.p variants={itemVariants} className="text-slate max-w-4xl mb-12 text-lg leading-relaxed">
+        I'm a software developer with 2+ years of professional experience, specializing in building (and occasionally designing) high-performance, accessible web application.
         Currently, I'm focused on building accessible, human-centered products.
       </motion.p>
       {/* <motion.div variants={itemVariants} className="relative">

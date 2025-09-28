@@ -14,6 +14,7 @@ import Footer from "./footer"
 import About from "./sections/about"
 import { ReactLenis } from "lenis/react"
 import gsap from "gsap"
+import Header from "./header"
 
 
 
@@ -191,6 +192,7 @@ export default function MainContent() {
     >
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
 
+<Header/>
       <SidebarNav currentSection={currentSection} totalSections={sectionList.length} isLoaded={isLoaded} />
       <SocialSidebar />
       <EmailSidebar />
@@ -200,9 +202,10 @@ export default function MainContent() {
             key={id}
             id={id}
             ref={el => { sectionRefs.current[idx] = el }}
-            className="min-h-screen flex items-center justify-center"
+            className="min-h-screen flex items-center justify-center bg-transparent"
             data-active={activeScrollSection === id}
           >
+            
             <Component />
           </section>
         ))}
