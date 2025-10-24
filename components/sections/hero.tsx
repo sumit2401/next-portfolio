@@ -72,7 +72,7 @@ export default function Hero() {
         I'm a software developer with 2+ years of professional experience, specializing in building (and occasionally designing) high-performance, accessible web application.
         Currently, I'm focused on building accessible, human-centered products.
       </motion.p>
-      {/* <motion.div variants={itemVariants} className="relative">
+      {/* <motion.div variants={itemVariants} classNasme="relative">
         <GlowingEffect glow borderWidth={2} /> */}
         <motion.div variants={itemVariants}>
           <GlowingButton showArrow={true}>
@@ -80,7 +80,7 @@ export default function Hero() {
           </GlowingButton>
         </motion.div>
       {/* </motion.div> */}
-      <ImageMasking />
+      {/* <ImageMasking /> */}
 
       {/* Animated cursor */}
     
