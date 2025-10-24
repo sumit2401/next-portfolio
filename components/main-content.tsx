@@ -15,6 +15,7 @@ import About from "./sections/about"
 import { ReactLenis } from "lenis/react"
 import gsap from "gsap"
 import Header from "./header"
+import MobileNavbar from "./mobile-navbar"
 
 
 
@@ -63,7 +64,7 @@ export default function MainContent() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true)
-    }, 1000)
+    }, 200)
     return () => clearTimeout(timer)
   }, [])
 
@@ -178,7 +179,7 @@ export default function MainContent() {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2,
+        // delayChildren: 0.2,
       },
     },
   }
@@ -192,17 +193,27 @@ export default function MainContent() {
     >
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
 
-<Header/>
+      {/* Desktop Header */}
+      <Header/>
+      
+      {/* Mobile Navbar */}
+      <MobileNavbar />
+      
+      {/* Desktop Sidebar Navigation */}
       <SidebarNav currentSection={currentSection} totalSections={sectionList.length} isLoaded={isLoaded} />
+      
+      {/* Desktop Sidebars */}
       <SocialSidebar />
       <EmailSidebar />
-      <div className="ml-16">
+      
+      {/* Main Content */}
+      <div className="ml-0 md:ml-20 lg:ml-24 pt-16">
         {sectionList.map(({ id, Component }, idx) => (
           <section
             key={id}
             id={id}
             ref={el => { sectionRefs.current[idx] = el }}
-            className="min-h-screen flex items-center justify-center bg-transparent"
+            className="min-h-screen flex items-center justify-center bg-transparent w-full"
             data-active={activeScrollSection === id}
           >
             

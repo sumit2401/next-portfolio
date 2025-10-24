@@ -104,6 +104,9 @@ const config = {
       },
     },
   },
+  clipPath: {
+    folder: 'path("M0,0 H100 V100 H0 Q0,50 50,50 Z")',
+  },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config
 

@@ -36,7 +36,7 @@ export default function Contact() {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="section text-center max-w-2xl mx-auto relative"
+      className="section text-center w-full max-w-2xl mx-auto relative py-16 md:py-20 px-4 sm:px-6 md:px-8"
     >
       {/* Grid Background */}
       <CSSGridBackground 
@@ -49,18 +49,18 @@ export default function Contact() {
         maxGlowBoxes={8}
       />
       <div className="relative z-10">
-        <motion.p variants={itemVariants} className="font-mono text-teal mb-4">
+        <motion.p variants={itemVariants} className="font-mono text-teal mb-4 text-sm sm:text-base">
           04. What's Next?
         </motion.p>
-        <motion.h2 variants={itemVariants} className="text-4xl font-bold text-lightest-slate mb-6">
+        <motion.h2 variants={itemVariants} className="text-3xl sm:text-4xl font-bold text-lightest-slate mb-4 sm:mb-6">
           Get In Touch
         </motion.h2>
-        <motion.p variants={itemVariants} className="mb-10">
+        <motion.p variants={itemVariants} className="mb-8 sm:mb-10 text-sm sm:text-base">
           Although I'm not currently looking for new opportunities, my inbox is always open. Whether you have a question
           or just want to say hi, I'll try my best to get back to you!
         </motion.p>
         <motion.div variants={itemVariants}>
-          <Button variant="outline" size="lg" className="border-teal text-teal hover:bg-teal/10 font-mono">
+          <Button variant="outline" size="lg" className="border-teal text-teal hover:bg-teal/10 font-mono text-sm sm:text-base px-6 py-3">
             Say Hello
           </Button>
         </motion.div>

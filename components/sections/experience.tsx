@@ -98,7 +98,7 @@ export default function Experience(sectionRefs: any) {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="min-h-screen max-w-6xl py-20 px-4 md:px-8"
+      className="min-h-screen w-full max-w-4xl mx-auto py-16 md:py-20 px-4 sm:px-6 md:px-8"
     >
       <motion.h2 variants={itemVariants} className="numbered-heading mb-10">
         Where I've Worked
@@ -109,12 +109,12 @@ export default function Experience(sectionRefs: any) {
         value={activeTab}
         onValueChange={setActiveTab}
       >
-        <TabsList className="flex flex-col sm:flex-row h-auto bg-transparent border-l-2 border-lightest-navy sm:border-l-0 sm:border-b-2">
+        <TabsList className="flex flex-col sm:flex-row h-auto bg-transparent border-l-2 border-lightest-navy sm:border-l-0 sm:border-b-2 overflow-x-auto">
           {experiences.map((exp) => (
             <TabsTrigger
               key={exp.id}
               value={exp.id}
-              className="font-mono text-sm px-5 py-3 data-[state=active]:text-teal data-[state=active]:border-l-2 data-[state=active]:border-teal sm:data-[state=active]:border-l-0 sm:data-[state=active]:border-b-2 -ml-[2px] sm:-mb-[2px] text-left justify-start"
+              className="font-mono text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-3 data-[state=active]:text-teal data-[state=active]:border-l-2 data-[state=active]:border-teal sm:data-[state=active]:border-l-0 sm:data-[state=active]:border-b-2 -ml-[2px] sm:-mb-[2px] text-left justify-start whitespace-nowrap"
             >
               {exp.company}
             </TabsTrigger>
@@ -127,26 +127,26 @@ export default function Experience(sectionRefs: any) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <h3 className="text-xl text-light-slate font-medium mb-6">
+              <h3 className="text-lg sm:text-xl text-light-slate font-medium mb-4 sm:mb-6">
                 <span className="text-teal">@ {exp.company}</span>
               </h3>
               
               {/* Timeline */}
               <div className="relative">
-                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-teal/30"></div>
+                <div className="absolute left-3 sm:left-4 top-0 bottom-0 w-0.5 bg-teal/30"></div>
                 {exp.timeline.map((role, index) => (
-                  <div key={index} className="relative flex items-start mb-8">
-                    <div className="absolute left-3 w-2 h-2 bg-teal rounded-full mt-2"></div>
-                    <div className="ml-8">
-                      <h4 className="text-lg text-light-slate font-medium">
+                  <div key={index} className="relative flex items-start mb-6 sm:mb-8">
+                    <div className="absolute left-2 sm:left-3 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-teal rounded-full mt-2"></div>
+                    <div className="ml-6 sm:ml-8">
+                      <h4 className="text-base sm:text-lg text-light-slate font-medium">
                         {role.title}
                       </h4>
-                      <p className="font-mono text-sm text-slate mt-1 mb-4">
+                      <p className="font-mono text-xs sm:text-sm text-slate mt-1 mb-3 sm:mb-4">
                         {role.date}
                       </p>
-                      <ul className="space-y-3">
+                      <ul className="space-y-2 sm:space-y-3">
                         {role.responsibilities.map((item, i) => (
-                          <li key={i} className="flex">
+                          <li key={i} className="flex text-sm sm:text-base">
                             <span className="text-teal mr-2 mt-1 flex-shrink-0">▹</span>
                             <span>{item}</span>
                           </li>
@@ -158,12 +158,12 @@ export default function Experience(sectionRefs: any) {
               </div>
               
               {/* Skills tags */}
-              <div className="flex flex-wrap mt-8">
+              <div className="flex flex-wrap mt-6 sm:mt-8">
                 {exp.skills &&
                   exp.skills.map((skill, i) => (
                     <span
                       key={i}
-                      className="bg-navy text-teal rounded-full px-3 py-1 mr-2 mb-2 text-sm font-mono border border-teal/30"
+                      className="bg-navy text-teal rounded-full px-2 sm:px-3 py-1 mr-2 mb-2 text-xs sm:text-sm font-mono border border-teal/30"
                     >
                       {skill}
                     </span>

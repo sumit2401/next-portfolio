@@ -38,10 +38,10 @@ export default function SocialSidebar() {
       initial="hidden"
       animate="visible"
       variants={sidebarVariants}
-      className="fixed bottom-8  z-50"
+      className="md:fixed bottom-4 left-4  md:bottom-8 md:left-0 z-50"
     >
       <div className="flex flex-row items-center">
-        <motion.ul className="flex flex-row items-center space-x-6 text-slate-200 before:content-[''] before:block before:w-24 before:h-px before:bg-white before:mr-6">
+        <motion.ul className="flex flex-row items-center space-x-4 md:space-x-6 text-slate-200 before:content-[''] before:block before:w-16 md:before:w-24 before:h-px before:bg-white before:mr-4 md:before:mr-6">
           {socialLinks.map(({ href, Icon, label }) => (
             <motion.li key={label} variants={itemVariants} className="hover:-translate-y-2 transition-all duration-200 hover:scale-110">
               <Link
@@ -50,7 +50,7 @@ export default function SocialSidebar() {
                 rel="noopener noreferrer"
                 className="text-slate hover:text-teal transform hover:-translate-y-2 transition-all duration-200 hover:scale-110"
               >
-                <Icon size={20} />
+                <Icon size={18} className="md:w-5 md:h-5" />
                 <span className="sr-only">{label}</span>
               </Link>
             </motion.li>

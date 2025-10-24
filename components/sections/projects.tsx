@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { ExternalLink, Github, Folder } from "lucide-react"
+import ProjectEnvelope from "../ProjectEnvelope"
 
 export default function Projects() {
   const ref = useRef(null)
@@ -112,35 +113,35 @@ export default function Projects() {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="min-h-screen max-w-6xl py-20 px-4 md:px-8"
+      className="min-h-screen w-full max-w-4xl mx-auto py-16 md:py-20 px-4 sm:px-6 md:px-8"
     >
       <motion.h2 variants={itemVariants} className="numbered-heading mb-10">
         Some Things I've Built
       </motion.h2>
 
-      <div className="space-y-24">
+      <div className="space-y-16 md:space-y-24">
         {featuredProjects.map((project, i) => (
           <motion.div
             key={i}
             variants={itemVariants}
-            className={`relative grid md:grid-cols-12 gap-4 items-center ${i % 2 === 0 ? "" : "md:text-right"}`}
+            className={`relative grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-4 items-center ${i % 2 === 0 ? "" : "md:text-right"}`}
           >
             <div
               className={`md:col-span-7 relative z-10 ${
                 i % 2 === 0 ? "md:col-start-6 md:text-right" : "md:col-start-1"
               }`}
             >
-              <p className="font-mono text-teal text-sm mb-2">Featured Project</p>
-              <h3 className="text-2xl font-semibold text-lightest-slate mb-4">
+              <p className="font-mono text-teal text-xs sm:text-sm mb-2">Featured Project</p>
+              <h3 className="text-xl sm:text-2xl font-semibold text-lightest-slate mb-4">
                 <Link href={project.external} className="hover:text-teal transition-colors">
                   {project.title}
                 </Link>
               </h3>
-              <div className="bg-light-navy p-6 rounded-md shadow-xl mb-4">
-                <p className="text-light-slate">{project.description}</p>
+              <div className="bg-light-navy p-4 sm:p-6 rounded-md shadow-xl mb-4">
+                <p className="text-light-slate text-sm sm:text-base">{project.description}</p>
               </div>
               <ul
-                className={`flex flex-wrap gap-x-4 gap-y-2 font-mono text-sm mb-6 ${
+                className={`flex flex-wrap gap-x-3 gap-y-2 font-mono text-xs sm:text-sm mb-6 ${
                   i % 2 === 0 ? "md:justify-end" : ""
                 }`}
               >
@@ -150,21 +151,21 @@ export default function Projects() {
               </ul>
               <div className={`flex gap-4 ${i % 2 === 0 ? "md:justify-end" : ""}`}>
                 <Link href={project.github} className="text-light-slate hover:text-teal transition-colors">
-                  <Github size={20} />
+                  <Github size={18} className="sm:w-5 sm:h-5" />
                   <span className="sr-only">GitHub</span>
                 </Link>
                 <Link href={project.external} className="text-light-slate hover:text-teal transition-colors">
-                  <ExternalLink size={20} />
+                  <ExternalLink size={18} className="sm:w-5 sm:h-5" />
                   <span className="sr-only">External Link</span>
                 </Link>
               </div>
             </div>
             <div
-              className={`md:col-span-7 relative ${
+              className={`md:col-span-7 relative order-first md:order-none ${
                 i % 2 === 0 ? "md:col-start-1" : "md:col-start-6"
               } md:absolute md:inset-0`}
             >
-              <Link href={project.external} className="relative block w-full h-full rounded overflow-hidden">
+              <Link href={project.external} className="relative block w-full h-48 sm:h-64 md:h-full rounded overflow-hidden">
                 <div className="absolute inset-0 bg-teal/50 hover:bg-transparent z-10 transition-colors duration-300"></div>
                 <Image
                   src={project.image || "/placeholder.svg"}
@@ -179,45 +180,24 @@ export default function Projects() {
         ))}
       </div>
 
-      <motion.h3 variants={itemVariants} className="text-center text-2xl font-semibold text-lightest-slate mt-24 mb-10">
+      <motion.h3 variants={itemVariants} className="text-center text-xl sm:text-2xl font-semibold text-lightest-slate mt-16 md:mt-24 mb-8 md:mb-10">
         Other Noteworthy Projects
       </motion.h3>
 
-      <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {otherProjects.map((project, i) => (
           <motion.div
             key={i}
             variants={itemVariants}
-            className="bg-light-navy rounded-md p-6 flex flex-col h-full transition-transform hover:-translate-y-2 duration-200"
+            className=""
           >
-            <div className="flex justify-between items-center mb-6">
-              <Folder className="text-teal" size={40} />
-              <div className="flex gap-4">
-                {project.github && (
-                  <Link href={project.github} className="text-light-slate hover:text-teal transition-colors">
-                    <Github size={20} />
-                    <span className="sr-only">GitHub</span>
-                  </Link>
-                )}
-                {project.external && (
-                  <Link href={project.external} className="text-light-slate hover:text-teal transition-colors">
-                    <ExternalLink size={20} />
-                    <span className="sr-only">External Link</span>
-                  </Link>
-                )}
-              </div>
-            </div>
-            <h4 className="text-xl font-semibold text-lightest-slate mb-2">
-              <Link href={project.external || "#"} className="hover:text-teal transition-colors">
-                {project.title}
-              </Link>
-            </h4>
-            <p className="text-light-slate mb-6 flex-grow">{project.description}</p>
-            <ul className="flex flex-wrap gap-x-3 gap-y-2 font-mono text-xs">
-              {project.tech.map((tech, j) => (
-                <li key={j}>{tech}</li>
-              ))}
-            </ul>
+            <ProjectEnvelope
+              title={project.title}
+              description={project.description}
+              tech={project.tech}
+              github={project.github}
+              external={project.external}
+            />
           </motion.div>
         ))}
       </motion.div>

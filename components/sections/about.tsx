@@ -100,26 +100,26 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="min-h-screen max-w-6xl py-20 px-4 md:px-8 section"
+      className="min-h-screen w-full max-w-6xl mx-auto py-16 md:py-20 px-4 sm:px-6 md:px-8 section"
     >
       <div>
-        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-teal-400">
-          <span className="text-teal font-mono text-xl mr-2">01.</span>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-12 md:mb-16 text-teal-400">
+          <span className="text-teal font-mono text-lg sm:text-xl mr-2">01.</span>
           About Me
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-          <div ref={textContainerRef} className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 items-start">
+          <div ref={textContainerRef} className="lg:col-span-2 space-y-4 md:space-y-6">
             {paragraphs.map((para, idx) => (
-              <p key={idx} className="text-slate-400 leading-relaxed text-md">
+              <p key={idx} className="text-slate-400 leading-relaxed text-sm md:text-base">
                 {para}
               </p>
             ))}
 
-            <div className="mt-8">
-                <p className="text-slate-400 mb-4">Here are a few technologies I've been working with recently:</p>
+            <div className="mt-6 md:mt-8">
+                <p className="text-slate-400 mb-4 text-sm md:text-base">Here are a few technologies I've been working with recently:</p>
              
-              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm font-mono">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs sm:text-sm font-mono">
                 {skills.map((skill, i) => (
                   <li key={i} className="flex items-center text-slate-400">
                     <span className="text-teal-400 mr-3">▹</span>
@@ -130,16 +130,17 @@ export default function About() {
             </div>
           </div>
 
-          <div className="relative group mx-auto lg:mx-0">
-            <div className="relative w-full max-w-[280px] aspect-square">
-              <div className="absolute inset-0 border-2 border-teal rounded translate-x-5 translate-y-5 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform duration-300 ease-out z-0"></div>
+
+          <div className="relative group mx-auto lg:mx-0 mt-8 lg:mt-0">
+            <div className="relative w-full max-w-[200px] sm:max-w-[240px] lg:max-w-[280px] aspect-square">
+              <div className="absolute inset-0 border-2 border-teal rounded translate-x-3 translate-y-3 sm:translate-x-4 sm:translate-y-4 lg:translate-x-5 lg:translate-y-5 group-hover:translate-x-2 group-hover:translate-y-2 sm:group-hover:translate-x-3 sm:group-hover:translate-y-3 transition-transform duration-300 ease-out z-0"></div>
               <div className="absolute inset-0 bg-teal-400/20 rounded z-10 group-hover:bg-transparent transition-all duration-300 ease-out"></div>
               <Image
                 src={AboutImage}
                 alt="Sumit Patel Profile"
                 width={280}
                 height={280}
-                className="rounded z-20 relative  group-hover:grayscale-0 transition-all duration-300 ease-out object-cover"
+                className="rounded z-20 relative group-hover:grayscale-0 transition-all duration-300 ease-out object-cover"
                 priority
               />
             </div>
@@ -149,3 +150,5 @@ export default function About() {
     </section>
   )
 }
+
+
