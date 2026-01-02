@@ -36,7 +36,7 @@ export default function Contact() {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="section text-center w-full max-w-2xl mx-auto relative py-16 md:py-20 px-4 sm:px-6 md:px-8"
+      className="section text-center w-full max-w-6xl mx-auto relative py-16 md:py-20 px-4 sm:px-6 md:px-8"
     >
       {/* Grid Background */}
       <CSSGridBackground 

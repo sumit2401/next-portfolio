@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Fira_Code } from "next/font/google"
+import { Inter, Fira_Code, Red_Rose } from "next/font/google"
 import "./globals.css"
 // import { ThemeProvider } from "next-themes"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -18,6 +18,11 @@ const firaCode = Fira_Code({
   variable: "--font-fira-code",
   display: "swap",
 })
+const redRose = Red_Rose({
+  subsets: ["latin"],
+  variable: "--font-red-rose",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: "Portfolio | Software Engineer",
@@ -33,7 +38,7 @@ export default function RootLayout({
   
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning className={`${inter.variable} ${firaCode.variable} font-sans text-slate antialiased`}>
+      <body suppressHydrationWarning className={`${redRose.variable} text-slate antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <GlowEffect />
           {children}

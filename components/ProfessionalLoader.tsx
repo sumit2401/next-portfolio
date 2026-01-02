@@ -104,7 +104,7 @@ export default function ProfessionalLoader() {
             className="flex flex-col items-start"
           >
             <motion.span 
-              className="text-2xl sm:text-3xl font-bold text-white tracking-tight"
+              className="text-7xl sm:text-3xl font-bold text-white tracking-tight"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}

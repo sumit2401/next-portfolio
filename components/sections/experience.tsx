@@ -98,7 +98,7 @@ export default function Experience(sectionRefs: any) {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="min-h-screen w-full max-w-4xl mx-auto py-16 md:py-20 px-4 sm:px-6 md:px-8"
+      className="min-h-screen w-full max-w-6xl mx-auto py-16 md:py-20 px-4 sm:px-6 md:px-8"
     >
       <motion.h2 variants={itemVariants} className="numbered-heading mb-10">
         Where I've Worked

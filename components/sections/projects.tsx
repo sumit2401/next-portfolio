@@ -1,32 +1,32 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { motion, useInView } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { ExternalLink, Github, Folder } from "lucide-react"
-import ProjectEnvelope from "../ProjectEnvelope"
+import { ExternalLink, Github, ArrowUpRight } from "lucide-react"
 
 export default function Projects() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null)
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.15,
       },
     },
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5 },
+      transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
     },
   }
 
@@ -113,9 +113,13 @@ export default function Projects() {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="min-h-screen w-full max-w-4xl mx-auto py-16 md:py-20 px-4 sm:px-6 md:px-8"
+      className="relative min-h-screen w-full max-w-6xl mx-auto py-20 md:py-32 px-4 sm:px-6 md:px-8 lg:px-12"
     >
-      <motion.h2 variants={itemVariants} className="numbered-heading mb-10">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-teal/5 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal/5 rounded-full blur-3xl -z-10"></div>
+
+      <motion.h2 variants={itemVariants} className="numbered-heading mb-16 md:mb-20">
         Some Things I've Built
       </motion.h2>
 
@@ -128,7 +132,7 @@ export default function Projects() {
           >
             <div
               className={`md:col-span-7 relative z-10 ${
-                i % 2 === 0 ? "md:col-start-6 md:text-right" : "md:col-start-1"
+                i % 2 === 0 ? "md:col-start-6 md:text-right" : "md:col-start-1 md:text-left"
               }`}
             >
               <p className="font-mono text-teal text-xs sm:text-sm mb-2">Featured Project</p>
@@ -137,7 +141,7 @@ export default function Projects() {
                   {project.title}
                 </Link>
               </h3>
-              <div className="bg-light-navy p-4 sm:p-6 rounded-md shadow-xl mb-4">
+              <div className="bg-light-navy p-2 sm:p-6 rounded-md shadow-xl mb-4">
                 <p className="text-light-slate text-sm sm:text-base">{project.description}</p>
               </div>
               <ul
@@ -166,7 +170,7 @@ export default function Projects() {
               } md:absolute md:inset-0`}
             >
               <Link href={project.external} className="relative block w-full h-48 sm:h-64 md:h-full rounded overflow-hidden">
-                <div className="absolute inset-0 bg-teal/50 hover:bg-transparent z-10 transition-colors duration-300"></div>
+                <div className="absolute inset-0 bg-teal/50 hover:bg-transparent z-20 transition-colors duration-300"></div>
                 <Image
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
@@ -180,26 +184,68 @@ export default function Projects() {
         ))}
       </div>
 
-      <motion.h3 variants={itemVariants} className="text-center text-xl sm:text-2xl font-semibold text-lightest-slate mt-16 md:mt-24 mb-8 md:mb-10">
-        Other Noteworthy Projects
-      </motion.h3>
+      {/* Other Projects Section */}
+      <motion.div variants={itemVariants}>
+        <motion.h3
+          variants={itemVariants}
+          className="text-center text-2xl sm:text-3xl font-bold text-lightest-slate mb-12 md:mb-16"
+        >
+          Other Noteworthy Projects
+        </motion.h3>
 
-      <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {otherProjects.map((project, i) => (
-          <motion.div
-            key={i}
-            variants={itemVariants}
-            className=""
-          >
-            <ProjectEnvelope
-              title={project.title}
-              description={project.description}
-              tech={project.tech}
-              github={project.github}
-              external={project.external}
-            />
-          </motion.div>
-        ))}
+        <motion.div
+          variants={containerVariants}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+        >
+          {otherProjects.map((project, i) => (
+            <motion.div
+              key={i}
+              variants={itemVariants}
+              className="group relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Link
+                href={project.external}
+                className="relative block h-full p-6 bg-light-navy/30 backdrop-blur-sm rounded-lg border border-lightest-navy/20 hover:border-teal/50 transition-all duration-500 overflow-hidden"
+              >
+                {/* Background gradient on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-teal/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Header */}
+                <div className="relative z-10 flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <Github className="w-8 h-8 text-teal mb-4 group-hover:scale-110 transition-transform duration-300" />
+                    <h4 className="text-xl font-bold text-lightest-slate mb-2 group-hover:text-teal transition-colors duration-300">
+                      {project.title}
+                    </h4>
+                  </div>
+                  <ExternalLink className="w-5 h-5 text-light-slate group-hover:text-teal opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 translate-y-0 group-hover:-translate-y-1 transition-all duration-300" />
+                </div>
+
+                {/* Description */}
+                <p className="relative z-10 text-sm text-light-slate mb-6 leading-relaxed line-clamp-3">
+                  {project.description}
+                </p>
+
+                {/* Tech Stack */}
+                <div className="relative z-10 flex flex-wrap gap-2">
+                  {project.tech.map((tech, j) => (
+                    <span
+                      key={j}
+                      className="text-xs font-mono text-slate px-2 py-1 rounded border border-lightest-navy/20"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Hover shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
       </motion.div>
     </motion.section>
   )
