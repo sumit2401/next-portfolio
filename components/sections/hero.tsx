@@ -1,92 +1,134 @@
 "use client"
 
+import { useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import Typewriter from "typewriter-effect"
-import { ChevronRight } from "lucide-react"
-import { GlowingEffect } from "@/components/ui/glowing-effect"
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { GlowingButton } from "@/components/ui/glowing-button"
-import ImageMasking from "../ImageMasking"
-import AboutImage from '../../app/assets/images/sumit-pic.jpg'
 import { GlitchText } from "../ui/glitch-text"
 
-export default function Hero() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
-  }
+gsap.registerPlugin(ScrollTrigger)
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  }
+export default function Hero() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const nameRef = useRef<HTMLHeadingElement>(null)
+  const sublineRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLParagraphElement>(null)
+  const buttonRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const ctx = gsap.context(() => {
+      // Split name into characters for individual animation
+      const name = nameRef.current;
+      if (name) {
+        const text = name.innerText;
+        name.innerHTML = text.split("").map(char => `<span class="char inline-block">${char === " " ? "&nbsp;" : char}</span>`).join("");
+
+        gsap.from(".char", {
+          y: 100,
+          opacity: 0,
+          stagger: 0.02,
+          duration: 1.5,
+          ease: "expo.out",
+          delay: 0.5
+        });
+      }
+
+      // Fade in other elements
+      gsap.from(sublineRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        ease: "power3.out",
+        delay: 0.2
+      });
+
+      gsap.from(textRef.current, {
+        opacity: 0,
+        y: 30,
+        duration: 1.2,
+        ease: "power3.out",
+        delay: 1
+      });
+
+      gsap.from(buttonRef.current, {
+        opacity: 0,
+        y: 40,
+        duration: 1,
+        ease: "back.out(1.7)",
+        delay: 1.2
+      });
+
+      // Parallax effect on scroll
+      gsap.to(".hero-content", {
+        yPercent: -20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <motion.section
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      className="min-h-screen w-full max-w-6xl mx-auto py-16 md:py-20 px-4 sm:px-6 md:px-8 flex flex-col justify-center relative"
+    <section
+      ref={containerRef}
+      className="relative min-h-screen w-full flex flex-col justify-center items-center overflow-hidden bg-[#070707]"
     >
-      {/* Decorative elements */}
-      <div className="absolute -z-10 top-1/4 right-0 w-48 sm:w-72 h-48 sm:h-72 bg-teal/5 rounded-full blur-3xl"></div>
-      <div className="absolute -z-10 bottom-1/4 left-0 w-64 sm:w-96 md:w-[900px] h-40 sm:h-60 md:h-80 bg-purple-500/5 rounded-full blur-3xl"></div>
+      {/* Background elements */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[150px] animate-pulse" />
+        <div className="absolute bottom-[0%] right-[-10%] w-[60%] h-[60%] bg-[#7c3aed]/10 blur-[150px]" />
+        <div className="absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+      </div>
 
-      <motion.p variants={itemVariants} className="font-mono text-teal mb-5 text-sm md:text-base">
-        <GlitchText text="Hi, my name is" />
-      </motion.p>
-      <motion.h1
-        variants={itemVariants}
-        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-lightest-slate mb-4 tracking-tight"
-      >
-        <GlitchText text="Sumit Patel" />
-      </motion.h1>
-      <motion.div variants={itemVariants} className="h-[60px] sm:h-[80px] md:h-[100px] mb-6 w-full">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate">
-          <span className="inline-block min-w-[15ch] sm:min-w-[20ch] md:min-w-[30ch]">
-            <Typewriter
-              options={{
-                strings: [
-                  "I build things for the web.",
-                  "I create digital experiences.",
-                  "I develop modern applications.",
-                ],
-                autoStart: true,
-                loop: true,
-                deleteSpeed: 50,
-                delay: 50,
-              }}
-            />
+      <div className="hero-content relative z-10 w-full max-w-7xl px-8 flex flex-col items-center text-center">
+        <div ref={sublineRef} className="mb-6">
+          <span className="text-sm md:text-base font-mono text-[#7c3aed] uppercase tracking-[0.5em]">
+            Digital Artisan & Engineer
           </span>
-        </h2>
-      </motion.div>
-      <motion.p variants={itemVariants} className="text-slate w-full max-w-3xl mb-8 md:mb-12 text-base md:text-lg leading-relaxed">
+        </div>
 
-        I'm a software developer with 2+ years of professional experience, specializing in building (and occasionally designing) high-performance, accessible web application.
-        Currently, I'm focused on building accessible, human-centered products.
-      </motion.p>
-      {/* <motion.div variants={itemVariants} classNasme="relative">
-        <GlowingEffect glow borderWidth={2} /> */}
-      <motion.div variants={itemVariants}>
-        <GlowingButton showArrow={true}>
-          <GlitchText text="Check out my work" interval={10} />
-        </GlowingButton>
-      </motion.div>
-      {/* </motion.div> */}
-      {/* <ImageMasking /> */}
+        <h1
+          ref={nameRef}
+          className="text-[12vw] sm:text-[10vw] md:text-[8vw] font-bold text-white leading-none tracking-tighter mb-8 py-2 overflow-hidden"
+        >
+          Sumit Patel
+        </h1>
 
-      {/* Animated cursor */}
+        <p
+          ref={textRef}
+          className="text-lg md:text-xl text-white/50 max-w-2xl leading-relaxed mb-12"
+        >
+          I craft immersive digital experiences that live at the intersection of design and technology. Specializing in high-performance web applications with a focus on human-centered interaction.
+        </p>
 
-    </motion.section>
+        <div ref={buttonRef}>
+          <GlowingButton showArrow={true}>
+            <GlitchText text="Experience the work" interval={15} />
+          </GlowingButton>
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-50">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-white">Scroll</span>
+        <div className="w-[1px] h-12 bg-white/20 relative overflow-hidden">
+          <motion.div
+            className="absolute top-0 left-0 w-full h-full bg-[#7c3aed]"
+            animate={{ y: ["-100%", "100%"] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+      </div>
+    </section>
   )
 }

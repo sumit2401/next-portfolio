@@ -2,7 +2,6 @@
 
 import { useRef, useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import SidebarNav from "./sidebar-nav"
 import Hero from "./sections/hero"
 import Experience from "./sections/experience"
 import Projects from "./sections/projects"
@@ -46,7 +45,7 @@ export default function MainContent() {
 
 
     console.log(currentSection, "currentSection");
-    
+
 
 
 
@@ -76,7 +75,7 @@ export default function MainContent() {
       (entries) => {
         // Create a map of all sections with their intersection data
         const sectionIntersections = new Map()
-        
+
         entries.forEach((entry) => {
           const idx = sectionRefs.current.findIndex(ref => ref === entry.target)
           if (idx !== -1) {
@@ -122,7 +121,7 @@ export default function MainContent() {
         setActiveScrollSection(sectionList[bestSection].id)
         console.log(`Section changed to: ${bestSection + 1} (${sectionList[bestSection].id}) - Ratio: ${bestRatio.toFixed(2)}`)
       },
-      { 
+      {
         threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
         rootMargin: '0px'
       }
@@ -170,7 +169,7 @@ export default function MainContent() {
     }
   }, [isLoaded])
 
- 
+
 
 
   const containerVariants = {
@@ -194,20 +193,17 @@ export default function MainContent() {
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
 
       {/* Desktop Header */}
-      <Header/>
-      
+      <Header />
+
       {/* Mobile Navbar */}
       <MobileNavbar />
-      
-      {/* Desktop Sidebar Navigation */}
-      <SidebarNav currentSection={currentSection} totalSections={sectionList.length} isLoaded={isLoaded} />
-      
+
       {/* Desktop Sidebars */}
       <SocialSidebar />
       <EmailSidebar />
-      
+
       {/* Main Content */}
-      <div className="ml-0 md:ml-20 lg:ml-24 pt-16">
+      <div className="pt-16">
         {sectionList.map(({ id, Component }, idx) => (
           <section
             key={id}
@@ -216,7 +212,7 @@ export default function MainContent() {
             className="min-h-screen flex items-center justify-center bg-transparent w-full"
             data-active={activeScrollSection === id}
           >
-            
+
             <Component />
           </section>
         ))}
