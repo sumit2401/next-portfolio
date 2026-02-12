@@ -50,9 +50,8 @@ export default function Header() {
     )
   }
 
-  const headerClasses = `fixed top-0 left-0 right-0 w-full z-50 px-4 sm:px-6 md:px-6   transition-all duration-300 ${
-    scrolledToTop ? "bg-transparent" : "bg-black/90 backdrop-blur-sm shadow-lg"
-  } ${scrollDirection === "down" && !scrolledToTop ? "-translate-y-full" : "translate-y-0"}`
+  const headerClasses = `fixed top-0 left-0 right-0 w-full z-50 px-4 sm:px-6 md:px-6   transition-all duration-300 ${scrolledToTop ? "bg-transparent" : "bg-black/90 backdrop-blur-sm shadow-lg"
+    } ${scrollDirection === "down" && !scrolledToTop ? "-translate-y-full" : "translate-y-0"}`
 
   const navVariants = {
     hidden: { opacity: 0, y: -20 },

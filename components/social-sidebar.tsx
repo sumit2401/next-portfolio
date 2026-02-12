@@ -43,14 +43,37 @@ export default function SocialSidebar() {
       <div className="flex flex-row items-center">
         <motion.ul className="flex flex-row items-center space-x-4 md:space-x-6 text-slate-200 before:content-[''] before:block before:w-16 md:before:w-24 before:h-px before:bg-white before:mr-4 md:before:mr-6">
           {socialLinks.map(({ href, Icon, label }) => (
-            <motion.li key={label} variants={itemVariants} className="hover:-translate-y-2 transition-all duration-200 hover:scale-110">
+            <motion.li
+              key={label}
+              variants={itemVariants}
+              whileHover={{
+                y: -5,
+                scale: 1.25,
+                transition: {
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 10
+                }
+              }}
+            >
               <Link
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate hover:text-teal transform hover:-translate-y-2 transition-all duration-200 hover:scale-110"
+                className="text-slate hover:text-teal block transition-colors duration-200"
               >
-                <Icon size={18} className="md:w-5 md:h-5" />
+                <motion.div
+                  whileHover={{
+                    y: [0, -3, 0],
+                    transition: {
+                      repeat: Infinity,
+                      duration: 0.8,
+                      ease: "easeInOut"
+                    }
+                  }}
+                >
+                  <Icon size={18} className="md:w-5 md:h-5" />
+                </motion.div>
                 <span className="sr-only">{label}</span>
               </Link>
             </motion.li>

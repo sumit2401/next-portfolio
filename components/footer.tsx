@@ -11,7 +11,7 @@ export default function Footer() {
       transition={{ delay: 2.5, duration: 0.5 }}
       className="py-6 text-center font-mono text-sm text-slate"
     >
-      
+
       <div className="flex flex-col items-center justify-center space-y-2">
         <div className="flex space-x-4 md:hidden mb-4">
           <Link

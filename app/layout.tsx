@@ -5,12 +5,14 @@ import "./globals.css"
 // import { ThemeProvider } from "next-themes"
 import { ThemeProvider } from "@/components/theme-provider"
 import GlowEffect from "@/components/glow-effect"
+import CustomCursor from "@/components/custom-cursor"
+
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  
+
 })
 
 const firaCode = Fira_Code({
@@ -27,7 +29,7 @@ const redRose = Red_Rose({
 export const metadata: Metadata = {
   title: "Portfolio | Software Engineer",
   description: "Software Engineer specializing in building exceptional digital experiences",
-    generator: 'v0.dev'
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -35,12 +37,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${redRose.variable} text-slate antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <GlowEffect />
+          <CustomCursor />
           {children}
         </ThemeProvider>
       </body>

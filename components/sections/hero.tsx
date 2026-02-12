@@ -8,6 +8,8 @@ import { GlowingEffect } from "@/components/ui/glowing-effect"
 import { GlowingButton } from "@/components/ui/glowing-button"
 import ImageMasking from "../ImageMasking"
 import AboutImage from '../../app/assets/images/sumit-pic.jpg'
+import { GlitchText } from "../ui/glitch-text"
+
 export default function Hero() {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -41,13 +43,13 @@ export default function Hero() {
       <div className="absolute -z-10 bottom-1/4 left-0 w-64 sm:w-96 md:w-[900px] h-40 sm:h-60 md:h-80 bg-purple-500/5 rounded-full blur-3xl"></div>
 
       <motion.p variants={itemVariants} className="font-mono text-teal mb-5 text-sm md:text-base">
-        Hi, my name is
+        <GlitchText text="Hi, my name is" />
       </motion.p>
       <motion.h1
         variants={itemVariants}
         className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-lightest-slate mb-4 tracking-tight"
       >
-        Sumit Patel
+        <GlitchText text="Sumit Patel" />
       </motion.h1>
       <motion.div variants={itemVariants} className="h-[60px] sm:h-[80px] md:h-[100px] mb-6 w-full">
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate">
@@ -69,21 +71,22 @@ export default function Hero() {
         </h2>
       </motion.div>
       <motion.p variants={itemVariants} className="text-slate w-full max-w-3xl mb-8 md:mb-12 text-base md:text-lg leading-relaxed">
+
         I'm a software developer with 2+ years of professional experience, specializing in building (and occasionally designing) high-performance, accessible web application.
         Currently, I'm focused on building accessible, human-centered products.
       </motion.p>
       {/* <motion.div variants={itemVariants} classNasme="relative">
         <GlowingEffect glow borderWidth={2} /> */}
-        <motion.div variants={itemVariants}>
-          <GlowingButton showArrow={true}>
-            Check out my work
-          </GlowingButton>
-        </motion.div>
+      <motion.div variants={itemVariants}>
+        <GlowingButton showArrow={true}>
+          <GlitchText text="Check out my work" interval={10} />
+        </GlowingButton>
+      </motion.div>
       {/* </motion.div> */}
       {/* <ImageMasking /> */}
 
       {/* Animated cursor */}
-    
+
     </motion.section>
   )
 }
