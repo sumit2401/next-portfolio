@@ -31,12 +31,14 @@ const About = forwardRef((props, ref) => {
       const splitTitle = new SplitType(".about-reveal h2", { types: "words" });
       const splitText = new SplitType(".about-reveal p", { types: "words" });
       const splitLists = new SplitType(".about-reveal li", { types: "words" });
+      const splitHeadings = new SplitType(".about-reveal h4", { types: "words" });
 
       const allElements = [
         ...(splitIntro.words || []),
         ...(splitTitle.words || []),
         ...(splitText.words || []),
-        ...(splitLists.words || [])
+        ...(splitLists.words || []),
+        ...(splitHeadings.words || [])
       ] as HTMLElement[];
 
       // Initial scatter
@@ -94,10 +96,10 @@ const About = forwardRef((props, ref) => {
         rotationZ: 0,
         opacity: 1,
         stagger: {
-          amount: 1,
+          amount: 0.6,
           from: "random"
         },
-        ease: "power3.inOut" // Smoother easing
+        ease: "power2.out"
       });
 
       gsap.ticker.add(tickerCallback);
@@ -138,7 +140,7 @@ const About = forwardRef((props, ref) => {
 
               <div className="pt-12 grid grid-cols-2 gap-8 border-t border-white/10 mt-16">
                 <div>
-                  <h4 className="text-white font-bold mb-4 uppercase tracking-[0.2em] text-xs">Primary Focus</h4>
+                  <h4 className="text-white font-bold mb-4 uppercase tracking-[0.2em]  text-xs">Primary Focus</h4>
                   <ul className="text-white/40 space-y-2 text-sm font-mono uppercase tracking-widest">
                     <li>Frontend Architecture</li>
                     <li>Interactive Design</li>

@@ -166,7 +166,7 @@ export default function MainContent() {
                     }
                   }
                 }
-              }, currentPosition + (transitionDuration / 2));
+              }, currentPosition - (transitionDuration / 2));
             }
           }
 

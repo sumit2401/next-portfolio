@@ -77,7 +77,7 @@ export default function Header() {
     <header className={headerClasses}>
       <nav className="w-full flex justify-between items-start pt-12 text-sm font-medium tracking-wide uppercase">
         {/* Left Side: Navigation Links in Column */}
-        <div className="flex flex-col gap-3 items-start text-white/70">
+        <div className="flex flex-col gap-3 items-start text-white/70 mt-10">
           <RollingLink href="#about" text="About" className="hover:text-white" />
           <RollingLink href="#experience" text="Experience" className="hover:text-white" />
           <RollingLink href="#projects" text="Projects" className="hover:text-white" />
