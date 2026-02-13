@@ -1,51 +1,108 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, forwardRef, useImperativeHandle } from "react"
 import Image from "next/image"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import SumitImage from '../../app/assets/images/sumit-pic.jpg'
+import SplitType from "split-type"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-export default function About() {
+const About = forwardRef((props, ref) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLDivElement>(null)
   const textContentRef = useRef<HTMLDivElement>(null)
+  const timelineRef = useRef<gsap.core.Timeline | null>(null)
+
+  useImperativeHandle(ref, () => ({
+    getScatteringTimeline: () => timelineRef.current
+  }));
 
   useEffect(() => {
     if (!containerRef.current) return
 
-    const ctx = gsap.context(() => {
-      // Parallax effect for image
-      gsap.to(imageRef.current, {
-        yPercent: 20,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true
-        }
-      });
+    const ctx = gsap.context((self) => {
+      // Split text into words
+      // Split all text into words for cleaner scattering
+      const splitIntro = new SplitType(".about-reveal span", { types: "words" });
+      const splitTitle = new SplitType(".about-reveal h2", { types: "words" });
+      const splitText = new SplitType(".about-reveal p", { types: "words" });
+      const splitLists = new SplitType(".about-reveal li", { types: "words" });
 
-      // Staggered reveal for text blocks
-      const textBlocks = gsap.utils.toArray(".about-reveal") as HTMLElement[];
-      textBlocks.forEach((block) => {
-        gsap.from(block, {
-          y: 60,
+      const allElements = [
+        ...(splitIntro.words || []),
+        ...(splitTitle.words || []),
+        ...(splitText.words || []),
+        ...(splitLists.words || [])
+      ] as HTMLElement[];
+
+      // Initial scatter
+      allElements.forEach(el => {
+        const x = (Math.random() - 0.5) * window.innerWidth * 3.5;
+        const y = (Math.random() - 0.5) * window.innerHeight * 3.5;
+        const z = (Math.random() - 0.5) * 6000;
+        const rotationX = (Math.random() - 0.5) * 3600;
+        const rotationY = (Math.random() - 0.5) * 3600;
+        const rotationZ = (Math.random() - 0.5) * 3600;
+
+        gsap.set(el, {
+          x, y, z,
+          rotationX, rotationY, rotationZ,
           opacity: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: block,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
+          display: "inline-block",
+          transformStyle: "preserve-3d",
+          willChange: "transform, opacity"
         });
       });
+
+      // Create a timeline for the combination
+      const tl = gsap.timeline({ paused: true });
+      timelineRef.current = tl;
+
+      // Add a ticker for realistic 0-gravity float that fades on merge
+      const tickerCallback = () => {
+        const progress = tl.progress();
+        const driftIntensity = 1 - progress;
+
+        if (driftIntensity > 0.01) {
+          allElements.forEach((el, i) => {
+            const time = Date.now() * 0.001;
+            // Use percent for drift to avoid fighting with absolute x/y from timeline
+            const driftX = Math.sin(time + i) * 15 * driftIntensity;
+            const driftY = Math.cos(time * 0.8 + i) * 15 * driftIntensity;
+            gsap.set(el, {
+              xPercent: driftX,
+              yPercent: driftY,
+              overwrite: false
+            });
+          });
+        } else {
+          // Clear drift when merged
+          allElements.forEach(el => gsap.set(el, { xPercent: 0, yPercent: 0 }));
+        }
+      };
+
+      tl.to(allElements, {
+        x: 0,
+        y: 0,
+        z: 0,
+        rotationX: 0,
+        rotationY: 0,
+        rotationZ: 0,
+        opacity: 1,
+        stagger: {
+          amount: 1,
+          from: "random"
+        },
+        ease: "power3.inOut" // Smoother easing
+      });
+
+      gsap.ticker.add(tickerCallback);
+      self.add(() => () => gsap.ticker.remove(tickerCallback));
+
     }, containerRef);
 
     return () => ctx.revert();
@@ -55,7 +112,8 @@ export default function About() {
     <section
       ref={containerRef}
       id="about"
-      className="relative w-full py-32 md:py-64 px-8 sm:px-12 md:px-24 bg-[#070707] overflow-hidden"
+      className="relative w-full py-32 md:py-64 px-8 sm:px-12 md:px-24 bg-[#070707]"
+      style={{ perspective: "2000px" }}
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24 items-start">
@@ -130,9 +188,11 @@ export default function About() {
       </div>
 
       {/* Background large text */}
-      <div className="absolute right-[-10%] top-[40%] text-[25vw] font-bold text-white/[0.02] select-none pointer-events-none tracking-tighter">
+      <div className="absolute  top-[40%] text-[25vw] font-bold text-white/[0.02] select-none pointer-events-none tracking-tighter">
         ABOUT
       </div>
     </section>
   )
-}
+})
+
+export default About

@@ -44,32 +44,22 @@ export default function Experience() {
 
     const ctx = gsap.context(() => {
       const items = gsap.utils.toArray(".experience-item") as HTMLElement[];
-
-      items.forEach((item) => {
-        gsap.from(item, {
-          y: 40,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: item,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
-        });
+      gsap.from(items, {
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        delay: 0.5
       });
 
       // Animated vertical line
       gsap.from(".timeline-line", {
         scaleY: 0,
+        duration: 1.5,
         transformOrigin: "top",
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".timeline-container",
-          start: "top 70%",
-          end: "bottom 70%",
-          scrub: true
-        }
+        ease: "power3.out",
+        delay: 0.3
       });
     }, containerRef);
 
@@ -134,6 +124,9 @@ export default function Experience() {
             </button>
           </div>
         </div>
+      </div>
+      <div className="absolute  top-[40%] text-[15vw] font-bold text-white/[0.02] select-none pointer-events-none tracking-tighter">
+        EXPERIENCE
       </div>
     </section>
   );

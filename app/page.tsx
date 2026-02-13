@@ -4,7 +4,7 @@ import Loader from "@/components/loader"
 import MainContent from "@/components/main-content"
 import ProfessionalLoader from "@/components/ProfessionalLoader"
 import { useEffect, useState } from "react"
-// import { preload } from "next/dynamic"
+import { AnimatePresence, motion } from "framer-motion"
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
@@ -15,7 +15,7 @@ export default function Home() {
     const preloadContent = async () => {
       // Force render and prepare all components
       setIsContentReady(true)
-      
+
       // Preload critical images
       const imageUrls = [
         '/app/assets/images/sumit-pic.jpg',
@@ -25,7 +25,7 @@ export default function Home() {
         '/placeholder.jpg',
         '/placeholder.svg'
       ]
-      
+
       // Preload images
       const imagePromises = imageUrls.map(url => {
         return new Promise((resolve) => {
@@ -35,7 +35,7 @@ export default function Home() {
           img.src = url
         })
       })
-      
+
       // Wait for all images and assets to load
       await Promise.all([
         ...imagePromises,
@@ -53,7 +53,6 @@ export default function Home() {
     preloadContent()
 
     // Show loader for the total duration of all loading stages
-    // 800ms + 1200ms + 500ms = 2500ms + 300ms buffer = 2800ms
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 2800)
@@ -63,18 +62,26 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      {isLoading ? (
-        <>
-          <ProfessionalLoader />
-          {/* Preload content in background */}
-          {isContentReady && (
-            <div className="opacity-0 pointer-events-none absolute inset-0">
-              <MainContent />
-            </div>
-          )}
-        </>
-      ) : (
-        <MainContent />
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <ProfessionalLoader key="loader" />
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
+            <MainContent />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Preload content in background hidden */}
+      {isLoading && isContentReady && (
+        <div className="opacity-0 pointer-events-none absolute inset-0 -z-10">
+          <MainContent />
+        </div>
       )}
     </main>
   )

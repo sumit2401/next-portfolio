@@ -65,7 +65,7 @@ export default function SidebarNav({ currentSection, totalSections, isLoaded }: 
         {/* Progress bar starts from first nav item position */}
         <motion.div
           className="w-full bg-teal from-teal-400 to-teal-600"
-          style={{ 
+          style={{
             height: `${scrollProgress}%`,
             marginTop: '30px' // Start from first nav item position (py-6 + mb-8 + menu icon height)
           }}
@@ -92,20 +92,18 @@ export default function SidebarNav({ currentSection, totalSections, isLoaded }: 
             <motion.button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className={`relative group p-2 md:p-3 rounded-lg transition-all duration-300 ${
-                currentSection === index +1
+              className={`relative group p-2 md:p-3 rounded-lg transition-all duration-300 ${currentSection === index + 1
                   ? "bg-green-500/15"
                   : "hover:bg-white/5"
-              }`}
+                }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <item.icon 
-                className={`w-4 h-4 md:w-5 md:h-5 transition-colors duration-300 ${
-                  currentSection === index + 1 ? "text-teal" : "text-white/60 group-hover:text-white"
-                }`} 
+              <item.icon
+                className={`w-4 h-4 md:w-5 md:h-5 transition-colors duration-300 ${currentSection === index + 1 ? "text-teal" : "text-white/60 group-hover:text-white"
+                  }`}
               />
-              
+
               {/* Active indicator line */}
               {currentSection === index + 1 && (
                 <motion.div
@@ -115,7 +113,7 @@ export default function SidebarNav({ currentSection, totalSections, isLoaded }: 
                   transition={{ duration: 0.3 }}
                 />
               )}
-              
+
               {/* Tooltip - Hidden on mobile, shown on desktop */}
               <div className="hidden md:block absolute left-full ml-4 top-1/2 -translate-y-1/2 bg-black/95 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-white/10 shadow-lg">
                 {item.label}
@@ -125,7 +123,7 @@ export default function SidebarNav({ currentSection, totalSections, isLoaded }: 
         </div>
 
         {/* Progress Percentage - Hidden on mobile */}
-      
+
       </div>
     </motion.div>
   )

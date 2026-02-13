@@ -59,21 +59,42 @@ export default function ProfessionalLoader() {
 
   const width = useTransform(springProgress, [0, 100], ["0%", "100%"])
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-[9999] flex flex-col bg-[#070707] font-sans overflow-hidden"
-    >
-      {/* Top Progress Bar */}
-      <motion.div
-        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#7c3aed] to-[#4f46e5] z-50 shadow-[0_0_15px_rgba(124,58,237,0.5)]"
-        style={{ width }}
-      />
+  // Number of panels for the disintegrate effect - higher density for a more detailed shatter
+  const panels = Array.from({ length: 30 })
 
-      <div className="relative flex-1 flex flex-col justify-end items-end p-8 sm:p-16">
+  return (
+    <div className="fixed inset-0 z-[9999] flex flex-col font-sans overflow-hidden pointer-events-none">
+      {/* Disintegration Panels */}
+      <div className="absolute inset-0 flex z-[100] pointer-events-none">
+        {panels.map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ scaleY: 1 }}
+            exit={{
+              scaleY: 0,
+              transition: {
+                duration: 0.8,
+                ease: [0.76, 0, 0.24, 1],
+                // Randomized delays create a more natural, organic disintegrate effect
+                delay: Math.random() * 0.4
+              }
+            }}
+            style={{ originY: 0 }} // Reveal only from the top down
+            className="flex-1 bg-[#070707]"
+          />
+        ))}
+      </div>
+
+      <motion.div
+        exit={{ opacity: 0, y: -20, transition: { duration: 0.5, ease: "easeInOut" } }}
+        className="relative flex-1 flex flex-col justify-end items-end p-8 sm:p-16 z-[101]"
+      >
+        {/* Top Progress Bar */}
+        <motion.div
+          className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#7c3aed] to-[#4f46e5] z-50 shadow-[0_0_15px_rgba(124,58,237,0.5)]"
+          style={{ width }}
+        />
+
         {/* Large Percentage Text */}
         <div className="flex items-baseline select-none">
           <motion.span
@@ -85,10 +106,13 @@ export default function ProfessionalLoader() {
             %
           </span>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Background Subtle Grid or Pattern (Optional, based on clean look) */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+      {/* Background Subtle Grid */}
+      <motion.div
+        exit={{ opacity: 0 }}
+        className="absolute inset-0 opacity-[0.03] pointer-events-none z-[99]"
+      >
         <div
           className="w-full h-full"
           style={{
@@ -96,7 +120,7 @@ export default function ProfessionalLoader() {
             backgroundSize: `100px 100px`
           }}
         />
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   )
 }

@@ -35,9 +35,9 @@ export function GlowingButton({
         {...props}
         className={`relative z-10 border border-slate-200 bg-transparent text-slate font-mono group transition-all duration-300 overflow-hidden hover:bg-slate/10 ${borderRadius}`}
       >
-            <span className="flex items-center gap-1  transition-transform">
-            {children} {showArrow && <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />}
-            </span>
+        <span className="flex items-center gap-1  transition-transform">
+          {children} {showArrow && <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />}
+        </span>
       </Button>
     </div>
   );

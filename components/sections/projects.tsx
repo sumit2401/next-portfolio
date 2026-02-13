@@ -52,8 +52,6 @@ export default function Projects() {
           start: "top 15%",
           endTrigger: containerRef.current,
           end: "bottom 85%",
-          pin: true,
-          pinSpacing: false,
           scrub: true,
           onUpdate: (self) => {
             // Subtle scale and opacity effect as it gets stacked
@@ -90,7 +88,8 @@ export default function Projects() {
           {projects.map((project, i) => (
             <div
               key={i}
-              className="project-card relative w-full aspect-[16/10] md:aspect-[16/9] bg-[#111111] rounded-[2rem] overflow-hidden border border-white/5 shadow-2xl transition-transform duration-500"
+              className="project-card sticky w-full aspect-[16/10] md:aspect-[16/9] bg-[#111111] rounded-[2rem] overflow-hidden border border-white/5 shadow-2xl transition-transform duration-500"
+              style={{ top: `${(i + 1) * 2}rem` }}
             >
               <div className="absolute inset-0 z-0">
                 <Image

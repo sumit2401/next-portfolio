@@ -61,17 +61,7 @@ export default function Hero() {
         delay: 1.2
       });
 
-      // Parallax effect on scroll
-      gsap.to(".hero-content", {
-        yPercent: -20,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true
-        }
-      });
+
     }, containerRef);
 
     return () => ctx.revert();
@@ -83,14 +73,20 @@ export default function Hero() {
       className="relative min-h-screen w-full flex flex-col justify-center items-center overflow-hidden bg-[#070707]"
     >
       {/* Background elements */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div className="hero-background absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[150px] animate-pulse" />
         <div className="absolute bottom-[0%] right-[-10%] w-[60%] h-[60%] bg-[#7c3aed]/10 blur-[150px]" />
         <div className="absolute inset-0 opacity-[0.03]"
           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
       </div>
 
-      <div className="hero-content relative z-10 w-full max-w-7xl px-8 flex flex-col items-center text-center">
+      <div
+        className="hero-content relative z-10 w-full max-w-7xl px-8 flex flex-col items-center text-center"
+        style={{
+          transformOrigin: "center center",
+          willChange: "transform, opacity"
+        }}
+      >
         <div ref={sublineRef} className="mb-6">
           <span className="text-sm md:text-base font-mono text-[#7c3aed] uppercase tracking-[0.5em]">
             Digital Artisan & Engineer
@@ -119,7 +115,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-50">
+      <div className="scroll-indicator absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-50">
         <span className="text-[10px] uppercase tracking-[0.3em] text-white">Scroll</span>
         <div className="w-[1px] h-12 bg-white/20 relative overflow-hidden">
           <motion.div
