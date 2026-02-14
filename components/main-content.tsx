@@ -122,6 +122,9 @@ export default function MainContent() {
           });
 
           if (i > 0) {
+            // Determine start time: faster start for the first transition
+            const startTime = i === 1 ? 0 : currentPosition - (transitionDuration / 2);
+
             // Animation for section entering "from behind"
             tl.to(section as any, {
               opacity: 1,
@@ -132,7 +135,7 @@ export default function MainContent() {
               pointerEvents: "auto",
               duration: transitionDuration,
               ease: "power2.inOut"
-            }, currentPosition - (transitionDuration / 2));
+            }, startTime);
 
             // Animation for previous section "rolling down" and zooming out
             const prevSection = sections[i - 1] as any;
@@ -145,7 +148,7 @@ export default function MainContent() {
               pointerEvents: "none",
               duration: transitionDuration,
               ease: "power2.inOut"
-            }, currentPosition - (transitionDuration / 2));
+            }, startTime);
           }
 
           // Internal scroll animation for weighted sections

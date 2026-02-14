@@ -70,8 +70,8 @@ export default function Header() {
         scrollTrigger: {
           trigger: "body",
           start: "top top",
-          end: "+=200", // Complete transition in 200px of scroll
-          scrub: true, // Use true for immediate response
+          end: "+=100", // Faster transition to match immediate scroll
+          scrub: 0.5, // Slight smoothing
           invalidateOnRefresh: true,
         }
       })
