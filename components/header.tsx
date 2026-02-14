@@ -4,6 +4,11 @@ import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { GlowingButton } from "./ui/glowing-button"
+import NavigationDrawer from "./navigation-drawer"
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface RollingLinkProps {
   href: string;
@@ -30,79 +35,165 @@ const RollingLink = ({ href, text, className = "" }: RollingLinkProps) => {
     </Link>
   );
 };
-
 export default function Header() {
-  const [scrollDirection, setScrollDirection] = useState<"none" | "up" | "down">("none")
-  const [scrolledToTop, setScrolledToTop] = useState(true)
   const [mounted, setMounted] = useState(false)
-  const prevScrollY = useRef(0)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  const headerRef = useRef<HTMLElement>(null)
+  const logoRef = useRef<HTMLDivElement>(null)
+  const resumeRef = useRef<HTMLDivElement>(null)
+  // Removed hamburgerRef since we'll control it via state/framer
 
   useEffect(() => {
     setMounted(true)
+
+    // Add scroll listener for binary state
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      setIsScrolled(scrollY > 50)
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    // Check initial position
+    handleScroll()
+
+    return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   useEffect(() => {
     if (!mounted) return
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      const direction = currentScrollY > prevScrollY.current ? "down" : "up"
 
-      if (currentScrollY < 50) {
-        setScrolledToTop(true)
-      } else {
-        setScrolledToTop(false)
-      }
+    const ctx = gsap.context(() => {
+      // MASTER HEADER TRANSITION - Background only
+      const headerTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "body",
+          start: "top top",
+          end: "+=200", // Complete transition in 200px of scroll
+          scrub: true, // Use true for immediate response
+          invalidateOnRefresh: true,
+        }
+      })
 
-      if (Math.abs(currentScrollY - prevScrollY.current) > 10) {
-        setScrollDirection(direction)
-      }
+      // Background & Height - More compact
+      headerTl.to(headerRef.current, {
+        height: 70,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backdropFilter: "blur(24px)",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+        duration: 1,
+        ease: "power2.inOut"
+      }, 0)
 
-      prevScrollY.current = currentScrollY
-    }
+      // Logo - Complete fade out
+      headerTl.to(logoRef.current, {
+        opacity: 0,
+        y: -40,
+        scale: 0.5,
+        duration: 0.6,
+        ease: "power2.inOut"
+      }, 0)
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+      // Resume button - Scale down more
+      headerTl.to(resumeRef.current, {
+        opacity: 0.7,
+        scale: 0.85,
+        duration: 0.6,
+        ease: "power2.inOut"
+      }, 0)
+
+      // Removed NavLinks and Hamburger animations from GSAP to handle via State
+
+    }, headerRef)
+
+    return () => ctx.revert()
   }, [mounted])
 
   if (!mounted) {
     return (
-      <header className="fixed top-0 w-full z-40 px-6 h-20 transition-all duration-300 bg-transparent" />
+      <header className="fixed top-0 w-full z-40 px-6 h-20 bg-transparent" />
     )
   }
 
-  const headerClasses = `fixed top-0 left-0 right-0 w-full z-50 px-6 md:px-12 transition-all duration-300 h-20 flex items-center ${scrolledToTop ? "bg-transparent" : "bg-black/80 backdrop-blur-md border-b border-white/10"
-    } ${scrollDirection === "down" && !scrolledToTop ? "-translate-y-full" : "translate-y-0"}`
-
   return (
-    <header className={headerClasses}>
-      <nav className="w-full flex justify-between items-start pt-12 text-sm font-medium tracking-wide uppercase">
-        {/* Left Side: Navigation Links in Column */}
-        <div className="flex flex-col gap-3 items-start text-white/70 mt-10">
-          <RollingLink href="#about" text="About" className="hover:text-white" />
-          <RollingLink href="#experience" text="Experience" className="hover:text-white" />
-          <RollingLink href="#projects" text="Projects" className="hover:text-white" />
-          <RollingLink href="#contact" text="Contact" className="hover:text-white" />
-        </div>
+    <>
+      <header
+        ref={headerRef}
+        className="fixed top-0 left-0 right-0 w-full z-50 px-6 md:px-12 flex items-center h-28 md:h-40 bg-transparent transition-all duration-500"
+        style={{ willChange: "height, background-color, border-bottom, backdrop-filter" }}
+      >
+        <nav className="w-full flex justify-between items-center relative">
+          {/* Left Side: Navigation Links / Hamburger Switch */}
+          <div className="flex items-center min-w-[150px] relative h-full">
 
-        {/* Middle: Sumit in Hindi */}
-        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center pt-10">
-          <Link href="/" className="text-3xl sm:text-4xl md:text-5xl font-bold text-white hover:text-[#7c3aed] transition-colors duration-300">
-            सुमित
-          </Link>
-        </div>
+            {/* Desktop: Switch between Nav Links and Hamburger */}
+            <div className="hidden md:block relative">
+              <AnimatePresence mode="wait">
+                {!isScrolled ? (
+                  <motion.div
+                    key="nav-links"
+                    className="flex flex-col gap-1 text-[11px] font-bold tracking-[0.2em] uppercase text-white/50"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <RollingLink href="#about" text="About" className="hover:text-white transition-colors" />
+                    <RollingLink href="#experience" text="Experience" className="hover:text-white transition-colors" />
+                    <RollingLink href="#projects" text="Projects" className="hover:text-white transition-colors" />
+                    <RollingLink href="#contact" text="Contact" className="hover:text-white transition-colors" />
+                  </motion.div>
+                ) : (
+                  <motion.button
+                    key="hamburger"
+                    onClick={() => setIsDrawerOpen(true)}
+                    className="flex group flex-col gap-[8px] p-3 -ml-3 hover:bg-white/5 rounded-lg transition-all duration-300"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="w-9 h-[2.5px] bg-white/90 transition-all duration-500 ease-out group-hover:w-12 group-hover:bg-white group-hover:shadow-[0_0_8px_rgba(124,58,237,0.6)]" />
+                    <div className="w-6 h-[2.5px] bg-[#7c3aed]/80 transition-all duration-500 ease-out group-hover:w-12 group-hover:bg-[#7c3aed] group-hover:shadow-[0_0_12px_rgba(124,58,237,0.8)]" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
 
-        {/* Right Side: Resume */}
-        <div className="flex items-center">
-          <GlowingButton
-            className="shiny-button px-6 py-3 text-sm md:text-base"
-            borderRadius="rounded-full"
-          >
-            <RollingLink href="/resume" text="Resume" className="text-white group-hover:text-white" />
-          </GlowingButton>
+            {/* Mobile always visible */}
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="md:hidden group flex flex-col gap-[8px] p-2 hover:bg-white/5 rounded-lg transition-all duration-300"
+            >
+              <div className="w-9 h-[2.5px] bg-white/90 transition-all duration-500 ease-out group-hover:w-11 group-hover:bg-white group-hover:shadow-[0_0_8px_rgba(124,58,237,0.6)]" />
+              <div className="w-6 h-[2.5px] bg-[#7c3aed]/80 transition-all duration-500 ease-out group-hover:w-11 group-hover:bg-[#7c3aed] group-hover:shadow-[0_0_12px_rgba(124,58,237,0.8)]" />
+            </button>
+          </div>
 
+          {/* Middle: Sumit in Hindi - Hides on scroll */}
+          <div ref={logoRef} className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none md:pointer-events-auto">
+            <Link href="/" className="text-5xl md:text-7xl font-black text-white hover:text-[#7c3aed] transition-colors duration-500 tracking-tighter">
+              सुमित
+            </Link>
+          </div>
 
-        </div>
-      </nav>
-    </header>
+          {/* Right Side: Resume */}
+          <div ref={resumeRef} className="flex items-center justify-end min-w-[150px]">
+            <GlowingButton
+              className="px-6 py-2.5 text-xs md:text-sm font-bold"
+              borderRadius="rounded-full"
+            >
+              <RollingLink href="/resume" text="Resume" className="text-white group-hover:text-white" />
+            </GlowingButton>
+          </div>
+        </nav>
+      </header>
+
+      <NavigationDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      />
+    </>
   )
 }

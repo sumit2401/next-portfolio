@@ -28,6 +28,9 @@ export default function MainContent() {
   const [activeScrollSection, setActiveScrollSection] = useState("")
   const sectionRefs = useRef<(HTMLElement | null)[]>([])
   const aboutRef = useRef<any>(null)
+  const experienceRef = useRef<any>(null)
+  const projectsRef = useRef<any>(null)
+  const contactRef = useRef<any>(null)
 
   const lenisRef = useRef<any>()
 
@@ -61,7 +64,7 @@ export default function MainContent() {
       const sectionWeights: Record<string, number> = {
         hero: 1,
         about: 4,
-        experience: 5,
+        experience: 4,
         projects: 4,
         contact: 1,
         footer: 1,
@@ -165,6 +168,24 @@ export default function MainContent() {
                       scatteringTimeline.progress(this.progress());
                     }
                   }
+                  if (id === "experience" && experienceRef.current) {
+                    const experienceTimeline = experienceRef.current.getTimeline();
+                    if (experienceTimeline) {
+                      experienceTimeline.progress(this.progress());
+                    }
+                  }
+                  if (id === "projects" && projectsRef.current) {
+                    const projectsTimeline = projectsRef.current.getTimeline();
+                    if (projectsTimeline) {
+                      projectsTimeline.progress(this.progress());
+                    }
+                  }
+                  if (id === "contact" && contactRef.current) {
+                    const contactTimeline = contactRef.current.getTimeline();
+                    if (contactTimeline) {
+                      contactTimeline.progress(this.progress());
+                    }
+                  }
                 }
               }, currentPosition - (transitionDuration / 2));
             }
@@ -228,7 +249,7 @@ export default function MainContent() {
       <EmailSidebar />
 
       {/* Main Content */}
-      <div className="ferris-wheel-container overflow-hidden pt-16 h-screen w-full relative" style={{ perspective: "2000px" }}>
+      <div className="ferris-wheel-container overflow-hidden h-screen w-full relative" style={{ perspective: "2000px" }}>
         {sectionList.map(({ id, Component }, idx) => (
           <section
             key={id}
@@ -243,7 +264,17 @@ export default function MainContent() {
             }}
           >
             <div className="section-scroll-content w-full">
-              {id === "about" ? <About ref={aboutRef} /> : <Component />}
+              {id === "about" ? (
+                <About ref={aboutRef} />
+              ) : id === "experience" ? (
+                <Experience ref={experienceRef} />
+              ) : id == "projects" ? (
+                <Projects ref={projectsRef} />
+              ) : id === "contact" ? (
+                <Contact ref={contactRef} />
+              ) : (
+                <Component />
+              )}
             </div>
           </section>
         ))}
